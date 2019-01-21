@@ -96,4 +96,28 @@ def trapezePC(t0,h,N,y0,f):
 
     return [t,y]
 
+def trapezeN(t0,h,N,y0,f):
+    """Méthode du trapèze pour la résolution d'un problème de Cauchy.
+    Resolution de y'(t) = f(t,y(t)) avec y(t0) = y0 par la méthode du
+    trapèze avec un pas de temps h>0 et pour t = k*h, k=0..N.
+    Première méthode de résolution: Méthode de prédiction-correction.
+    """
+
+    # Construit un tableau des temps: t = t0 + [0,h,2h,...ih,...Nh]
+    t = np.linspace(t0,t0+N*h,N+1) # N+1 temps de t0 à t0+N*h
+
+    # Alloue un tableau de la taille de t, initialisé à 0. Il servira à
+    # stocker la solution aux instants t0+i*h.
+    y = 0.*t
+
+    # Donnée initiale, la valeur [0] du tableau y
+    y[0] = y0
+    
+    for k in np.arange(N):
+        #Équation non-linéaire initiale (on veut le résoudre pour fy=0)
+        def fy(x):
+            return x - y[k] + 0.5*h*( f(t[k],y[k]) + f(t[k+1],x))
+        y[k+1] = optimize.newton(fy,y[k])
+        
+    return [t,y]
 
