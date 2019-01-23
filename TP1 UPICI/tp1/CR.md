@@ -68,6 +68,7 @@
 
 ### Runge-Kutta pour y'(t) = 1-y^2 avec y(0) = 0
 **Valeur de l'erreur en fonction de h:**
+
 | h       | Erreur                |
 |:-------:|:---------------------:|
 | 0.2 | 0.0031649335610156224 |
