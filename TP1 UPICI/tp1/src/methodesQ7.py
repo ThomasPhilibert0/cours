@@ -1,7 +1,7 @@
 import numpy as np
 from scipy import optimize
 
-def euler_explicite(t0,h,N, y0,f, m):
+def euler_explicite(t0,h,N, y0,f, m, A):
     """Méthode d'Euler pour la résolution d'un problème de Cauchy.
     Resolution de y'(t) = f(t,y(t)) avec y(t0) = y0 par la méthode d'Euler
     explicite avec un pas de temps h>0 et pour t = k*h, k=0..N.
@@ -24,10 +24,13 @@ def euler_explicite(t0,h,N, y0,f, m):
         C=y[:,j]
         for i in np.arange(m):
             
-            B=f(C)
+            B=f(A,C)
             y[i,j+1] = y[i,j] + h*B[i] # Formule de la méthode d'Euler
 
     return [t,y]
+
+
+
 
 
 

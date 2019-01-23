@@ -53,7 +53,7 @@ def sol_trig(t):
 
     return np.sin(t) + np.cos(t)
 
-def f_diff(y):
+def f_diff(A,y):
     """Fonction différentielle de la forme y'(t) = Ay(t)"""
     return np.dot(A,y)
 
