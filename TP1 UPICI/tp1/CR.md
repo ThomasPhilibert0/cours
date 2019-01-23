@@ -97,7 +97,7 @@
 
 **Graphe de convergence:**
 
-[![Rk2F2C1Err](./img/Rk2F2C1Err.png)](img/Rk2F2C1Err.png)
+[![Rk2F2C1Err](./img/RK2F2C1Err.png)](img/RK2F2C1Err.png)
 
 
 ### Runge-Kutta pour y'(t) = 1-y^2 avec y(0) = 2
