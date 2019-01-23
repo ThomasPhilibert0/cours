@@ -76,6 +76,7 @@
 | 0.05 | 0.00020767373095655886 |
 | 0.025 | 5.2042102567435896e-05 |
 | 0.0125 | 1.3018256322779525e-05 |
+
 **Comparaison avec la solution exacte**
 ![Rk2F2C1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/RK2F2C1.png)
 **Graphe de convergence**
