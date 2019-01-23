@@ -1,4 +1,4 @@
-**Coudière Yves**
+Thomas Philibert, Matthieu Nastorg et Tara Vanhatalo
 # Rapport TP1
 ## Séance 1, partie 2
 ###  1. Euler explicite pour y'(t) = 1-y avec y(0) = 5
@@ -120,20 +120,20 @@
 [![RK2F2C2Err](./img/RK2F2C2Err.png)](img/RK2F2C2Err.png)
 
 ### 3bis. Comparaison des converges
-**y'(t) = 1-y avec y(0) = 5
+**y'(t) = 1-y avec y(0) = 5**
 
 [![CompF1](./img/CompF1.png)](img/CompF1.png)
 
 
-**y'(t) = 1-y^2 avec y(0) = 0
+**y'(t) = 1-y^2 avec y(0) = 0**
 
 [![CompF2C1](./img/CompF2C1.png)](img/CompF2C1.png)
 
-**y'(t) = 1-y^2 avec y(0) = 2
+**y'(t) = 1-y^2 avec y(0) = 2**
 
 [![CompF2C2](./img/CompF2C2.png)](img/CompF2C2.png)
 
-### Commentaire
+### Commentaire:
 On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et converge plus rapidement que celle d'Euler explicite.
 
 ### 4. Méthode de Saute-Mouton pour y'(t) = 1-y avec y(0) = 5
@@ -315,7 +315,7 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 [![TNF2C2Err](./img/TNF2C2Err.png)](img/TNF2C2Err.png)
 
 ### 6. Comparaison des 4 méthodes (Euler, RK2, Saute-Mouton, Trapèze PC)
-Comparaison des méthodes y'(t) = a*y(t) + (1-a)*cos(t) - (1+a)*sin(t), avec y(0)=1.
+Comparaison des méthodes pour le problème de Cauchy: y'(t) = a*y(t) + (1-a)*cos(t) - (1+a)*sin(t), avec y(0)=1.
 
 [![ErreurComp4](./img/ErreurComp4.png)](img/ErreurComp4.png)
 
@@ -325,5 +325,5 @@ Comparaison des méthodes y'(t) = a*y(t) + (1-a)*cos(t) - (1+a)*sin(t), avec y(0
 
 [![Comp4h001](./img/Comp4h001.png)](img/Comp4h001.png)
 
-
-## Séance 
+### 7. Module pour résoudre un système linéaire
+Le système linéaire à résoudre est  y' = Ay avec A = diag(-1,-2), qui a pour solution exacte y(t) = exp(At)*y(0) avec y(0)=(1,1) et T=1.
