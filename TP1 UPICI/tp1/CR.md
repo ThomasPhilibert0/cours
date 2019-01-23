@@ -1,4 +1,4 @@
-Thomas Philibert, Matthieu Nastorg et Tara Vanhatalo
+Thomas Philibert, Matthieu Nastorg et Tara Vanhatalo.
 # Rapport TP1
 ## Séance 1, partie 2
 ###  1. Euler explicite pour y'(t) = 1-y avec y(0) = 5
@@ -120,6 +120,9 @@ Thomas Philibert, Matthieu Nastorg et Tara Vanhatalo
 [![RK2F2C2Err](./img/RK2F2C2Err.png)](img/RK2F2C2Err.png)
 
 ### 3bis. Comparaison des converges
+
+Les points calculés par Euler Explicite sont en bleu et ceux calculés par Runge-Kutta 2 sont en rouge.
+
 **y'(t) = 1-y avec y(0) = 5**
 
 [![CompF1](./img/CompF1.png)](img/CompF1.png)
@@ -327,3 +330,23 @@ Comparaison des méthodes pour le problème de Cauchy: y'(t) = a*y(t) + (1-a)*co
 
 ### 7. Module pour résoudre un système linéaire
 Le système linéaire à résoudre est  y' = Ay avec A = diag(-1,-2), qui a pour solution exacte y(t) = exp(At)*y(0) avec y(0)=(1,1) et T=1.
+
+**Solution approchée par Euler Explicite:**
+
+[1.     0.82     0.672    0.5512   0.45152   0.370592]
+[1.     0.68     0.456    0.3152   0.20384 	 0.152128]
+
+**Solution approchée par Runge-Kutta d'ordre 2**
+
+[1.      0.82       0.6724     0.551368   0.45212176     0.37073984]
+[1.      0.68       0.4624     0.314432   0.21381376     0.14539336]
+
+**Solution approchée par Saute-Mouton:**
+
+[1.      0.82     0.672    0.5512   0.45152   0.370592]
+[1.      0.68     0.456    0.3152   0.20384   0.152128]
+
+**Solution approchée par Trapèze (Prédiction-Correcteur):**
+
+[1.      0.82     0.6724     0.551368   0.45212176		0.37073984]
+[1.      0.68     0.4624     0.314432   0.21381376		0.14539336]
