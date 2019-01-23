@@ -121,11 +121,17 @@
 
 ### 3bis. Comparaison des converges
 **y'(t) = 1-y avec y(0) = 5
-![comp1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/CompF1.png)
+
+[![CompF1](./img/CompF1.png)](img/CompF1.png)
+
+
 **y'(t) = 1-y^2 avec y(0) = 0
-![comp2](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/CompF2C1.png)
+
+[![CompF2C1](./img/CompF2C1.png)](img/CompF2C1.png)
+
 **y'(t) = 1-y^2 avec y(0) = 2
-![comp3](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/CompF2C2.png)
+
+[![CompF2C2](./img/CompF2C2.png)](img/CompF2C2.png)
 
 ### Commentaire
 On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et converge plus rapidement que celle d'Euler explicite.
