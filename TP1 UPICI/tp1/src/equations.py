@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-import scipy as sc
 
 # Fonction f(t,y), second membre d'équations différentielles d'ordre 1
 # écrite sous la forme d'un problème de Cauchy, y'(t) = f(t,y(t)) avec
@@ -28,11 +27,7 @@ def f_trig(t,y):
     """Fonction trigonométrique de la forme y'(t) =
     a*y(t) + (1-a)*cos(t) - (1+a)*sin(t) """
 
-    return a*y + (1.-a)*np.cos(t) - (1.-a)*np.sin(t)
-
-def f_diff(y):
-    """Fonction différentielle de la forme y'(t) = Ay(t)"""
-    return np.dot(A,y)
+    return a*y + (1.-a)*np.cos(t) - (1.+a)*np.sin(t)
 
 def sol_affine(t,y0):
     """Pour une fonction affine, on connait la solution exacte. C'est
@@ -58,6 +53,9 @@ def sol_trig(t):
 
     return np.sin(t) + np.cos(t)
 
-def sol_diff(t,y0):
-    """Solution exacte"""
+def f_diff(y):
+    """Fonction différentielle de la forme y'(t) = Ay(t)"""
+    return np.dot(A,y)
+
+
     
