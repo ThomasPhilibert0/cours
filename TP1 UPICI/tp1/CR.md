@@ -358,4 +358,5 @@ Le système linéaire à résoudre est  y' = Ay avec A = diag(-1,-2), qui a pour
 **Solution exacte de l'équation:**
 
 [1.      0.81873075      0.67032005      0.54881164      0.44932896      0.36787944]
+
 [1.      0.67032005      0.44932896      0.30119421      0.20189652      0.13533528]
