@@ -14,18 +14,20 @@ def euler_explicite(t0,h,N, y0,f, m):
     # stocker la solution aux instants t0+i*h.
     y = np.zeros([m,np.size(t)])
     B = np.zeros([m])
-    
+    C = np.zeros([m])
     # Donnée initiale, la valeur [0] du tableau y
     y[:,0] = y0
     
 
     # On doit faire N itérations en temps
-    for i in np.arange(m):
-        for j in np.arange(N): # Boucle de 0 à N-1
-            B=f(y[i,j])
-            y[i,j+1] = y[i,j] + h*B[j] # Formule de la méthode d'Euler
+    for j in np.arange(N):# Boucle de 0 à N-1
+        C=y[:,j]
+        for i in np.arange(m):
+            
+            B=f(C)
+            y[i,j+1] = y[i,j] + h*B[i] # Formule de la méthode d'Euler
 
-    return B
+    return [t,y]
 
 
 
