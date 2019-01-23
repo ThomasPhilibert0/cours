@@ -252,7 +252,15 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 **Graphe de convergence**
 ![TNF2C2Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TNF2C2Err.png)
 
+### 6. Comparaison des 4 méthodes (Euler, RK2, Saute-Mouton, Trapèze PC)
+Comparaison des méthodes y'(t) = a*y(t) + (1-a)*cos(t) - (1+a)*sin(t), avec y(0)=1.
 
+![ErreurComp4](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/ErreurComp4.png)
 
+![Comp4h05](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/Comp4h05.png)
+
+![Comp4h01](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/Comp4h01.png)
+
+![Comp4h001](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/Comp4h001.png)
 
 ## Séance 
