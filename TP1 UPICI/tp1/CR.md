@@ -334,19 +334,23 @@ Le système linéaire à résoudre est  y' = Ay avec A = diag(-1,-2), qui a pour
 **Solution approchée par Euler Explicite:**
 
 [1.     0.82     0.672    0.5512   0.45152   0.370592]
+
 [1.     0.68     0.456    0.3152   0.20384 	 0.152128]
 
 **Solution approchée par Runge-Kutta d'ordre 2**
 
 [1.      0.82       0.6724     0.551368   0.45212176     0.37073984]
+
 [1.      0.68       0.4624     0.314432   0.21381376     0.14539336]
 
 **Solution approchée par Saute-Mouton:**
 
 [1.      0.82     0.672    0.5512   0.45152   0.370592]
+
 [1.      0.68     0.456    0.3152   0.20384   0.152128]
 
 **Solution approchée par Trapèze (Prédiction-Correcteur):**
 
 [1.      0.82     0.6724     0.551368   0.45212176		0.37073984]
+
 [1.      0.68     0.4624     0.314432   0.21381376		0.14539336]
