@@ -13,9 +13,12 @@
 | 0.0125  | 0.003740692714979372  |
 | 0.00625 | 0.0018654552588085824 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![EulerExF1](./img/EulerExF1.png)](img/EulerExF1.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![EulerExF1Err](./img/EulerExF1Err.png)](img/EulerExF1Err.png)
 
 ### 2. Euler explicite pour y'(t) = 1-y^2 avec y(0) = 0
@@ -29,10 +32,12 @@
 |0.025 | 0.006178101429809816 |
 |0.0125 | 0.0030783025937682084  |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![EulerExF2C1](./img/EulerExF2C1.png)](img/EulerExF2C1.png)
 
-**Graphe de convergence**
+**Graphe de convergence:**
+
 [![EulerExF2C1Err](./img/EulerExF2C1Err.png)](img/EulerExF2C1Err.png)
 
 
@@ -47,9 +52,12 @@
 | 0.025 | 0.010160149344250627 |
 | 0.0125 | 0.00500229386518795|
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![EulerExF2C2](./img/EulerExF2C2.png)](img/EulerExF2C2.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![EulerExF2C2Err](./img/EulerExF2C2Err.png)](img/EulerExF2C2Err.png)
 
 ### 3. Runge-Kutta 2 pour y'(t) = 1-y avec y(0) = 5
@@ -64,9 +72,12 @@
 | 0.0125 | 1.5651247806977652e-05 |
 | 0.00625 | 3.894467125035026e-06 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![RK2F1](./img/RK2F1.png)](img/RK2F1.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![RK2F1Err](./img/RK2F1Err.png)](img/RK2F1Err.png)
 
 ### Runge-Kutta pour y'(t) = 1-y^2 avec y(0) = 0
@@ -80,9 +91,12 @@
 | 0.025 | 5.2042102567435896e-05 |
 | 0.0125 | 1.3018256322779525e-05 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![RK2F2C1](./img/RK2F2C1.png)](img/RK2F2C1.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![Rk2F2C1Err](./img/Rk2F2C1Err.png)](img/Rk2F2C1Err.png)
 
 
@@ -97,9 +111,12 @@
 | 0.025 | 0.00031276896055471335 |
 | 0.0125 | 7.553937980781941e-05 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![RK2F2C2](./img/RK2F2C2.png)](img/RK2F2C2.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![RK2F2C2Err](./img/RK2F2C2Err.png)](img/RK2F2C2Err.png)
 
 ### 3bis. Comparaison des converges
@@ -125,9 +142,12 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.0125 | 1.54982648355215e-05 |
 | 0.00625 | 3.875820817240393e-06 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![SMF1](./img/SMF1.png)](img/SMF1.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![SMF1Err](./img/SMF1Err.png)](img/SMF1Err.png)
 
 
@@ -142,9 +162,12 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.025 | 0.0002078691909182984 |
 | 0.0125 | 5.205431190321056e-05 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![SMF2C1](./img/SMF2C1.png)](img/SMF2C1.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![SMF2C1Err](./img/SMF2C1Err.png)](img/SMF2C1Err.png)
 
 
@@ -159,9 +182,12 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.025 | 0.0003730629634605818 |
 | 0.0125 | 9.228116827941486e-05 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![SMF2C2](./img/SMF2C2.png)](img/SMF2C2.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![SMF2C2Err](./img/SMF2C2Err.png)](img/SMF2C2Err.png)
 
 ### 5. Méthode du Trapèze (Prédiction-Correcteur) pour y'(t) = 1-y avec y(0) = 5
@@ -176,9 +202,12 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.0125 | 1.5651247806977652e-05 |
 | 0.00625 | 3.8944671248553435e-06 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![TPCF1](./img/TPCF1.png)](img/TPCF1.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![TPCF1Err](./img/TPCF1Err.png)](img/TPCF1Err.png)
 
 ### Méthode de Trapèze (Prédiction-Correcteur) pour y'(t) = 1-y^2 avec y(0) = 0
@@ -192,9 +221,12 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.025 | 0.0001109057440015871 |
 | 0.0125 | 2.748082416725165e-05 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![TPCF2C1](./img/TPCF2C1.png)](img/TPCF2C1.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![TPCF2C1Err](./img/TPCF2C1Err.png)](img/TPCF2C1Err.png)
 
 
@@ -209,9 +241,12 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.025 | 0.0002394411775375868 |
 | 0.0125 | 5.836645027214847e-05 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![TPCF2C2](./img/TPCF2C2.png)](img/TPCF2C2.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![TPCF2C2Err](./img/TPCF2C2Err.png)](img/TPCF2C2Err.png)
 
 ### 5bis. Méthode du Trapèze (Newton) pour y'(t) = 1-y avec y(0) = 5
@@ -226,9 +261,12 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.0125 | 7.752609417133195e-06 |
 | 0.00625 | 1.9381277485219057e-06 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![TNF1](./img/TNF1.png)](img/TNF1.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![TNF1Err](./img/TNF1Err.png)](img/TNF1Err.png)
 
 
@@ -243,9 +281,12 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.025 | 0.00010404524746699833 |
 | 0.0125 | 2.603407287806165e-05 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![TNF2C1](./img/TNF2C1.png)](img/TNF2C1.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![TNF2C1Err](./img/TNF2C1Err.png)](img/TNF2C1Err.png)
 
 ### Méthode de Trapèze (Newton) pour y'(t) = 1-y^2 avec y(0) = 2
@@ -259,9 +300,12 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.025 | 0.00017857085462724066 |
 | 0.0125 | 4.461033000169874e-05 |
 
-**Comparaison avec la solution exacte**
+**Comparaison avec la solution exacte:**
+
 [![TNF2C2](./img/TNF2C2.png)](img/TNF2C2.png)
-**Graphe de convergence**
+
+**Graphe de convergence:**
+
 [![TNF2C2Err](./img/TNF2C2Err.png)](img/TNF2C2Err.png)
 
 ### 6. Comparaison des 4 méthodes (Euler, RK2, Saute-Mouton, Trapèze PC)
