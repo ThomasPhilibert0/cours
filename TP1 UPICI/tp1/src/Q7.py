@@ -53,7 +53,10 @@ def EQDiff() :
         f2[l]=max(e2)
         f3[l]=max(e3)
         f4[l]=max(e4)
-        plt.plot(h,f1[l],'b-+',label = 'Pour h = '+ str(h))
+        plt.plot(h,f1[l],'b-+')
+        plt.plot(h,f2[l],'r-+')
+        plt.plot(h,f2[l],'g-+')
+        plt.plot(h,f2[l],'m-+')
         
         h=h/2
         
@@ -61,8 +64,8 @@ def EQDiff() :
     plt.yscale('log')
     plt.xlabel('h')
     plt.ylabel('e1')
-    plt.title("Erreur en fonction du pas h")
+    plt.title("Erreur maximal en fonction du pas h")
     plt.legend()
     plt.show()
     
-    return f1
+    return f1,f2,f3,f4
