@@ -14,7 +14,7 @@
 | 0.00625 | 0.0018654552588085824 |
 
 **Comparaison avec la solution exacte**
-![Fonction1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/EulerExF1.png)
+![Fonction1](/tp1/img/EulerExF1.png)
 **Graphe de convergence**
 ![Fonction1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/EulerExF1Err.png)
 
