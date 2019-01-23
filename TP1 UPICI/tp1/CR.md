@@ -169,6 +169,7 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.025 | 6.319767711300863e-05 |
 | 0.0125 | 1.5651247806977652e-05 |
 | 0.00625 | 3.8944671248553435e-06 |
+
 **Comparaison avec la solution exacte**
 ![TPCF1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TPCF1.png)
 **Graphe de convergence**
