@@ -158,6 +158,7 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 
 ### 5. Méthode du Trapèze (Prédiction-Correcteur) pour y'(t) = 1-y avec y(0) = 5
 **Valeur de l'erreur en fonction de h:**
+
 | h       | Erreur                |
 |:-------:|:---------------------:|
 | 0.2 | 0.004629385342769428 |
