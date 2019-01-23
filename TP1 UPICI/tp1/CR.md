@@ -333,9 +333,9 @@ Le système linéaire à résoudre est  y' = Ay avec A = diag(-1,-2), qui a pour
 
 **Solution approchée par Euler Explicite:**
 
-[1.     0.82     0.672    0.5512   0.45152   0.370592]
+[1.      0.8     0.64    0.512   0.4096  0.32768]
 
-[1.     0.68     0.456    0.3152   0.20384 	 0.152128]
+[1.      0.6     0.36    0.216   0.1296  0.07776]
 
 **Solution approchée par Runge-Kutta d'ordre 2**
 
@@ -354,3 +354,8 @@ Le système linéaire à résoudre est  y' = Ay avec A = diag(-1,-2), qui a pour
 [1.      0.82     0.6724     0.551368   0.45212176		0.37073984]
 
 [1.      0.68     0.4624     0.314432   0.21381376		0.14539336]
+
+**Solution exacte de l'équation:**
+
+[1.      0.81873075      0.67032005      0.54881164      0.44932896      0.36787944]
+[1.      0.67032005      0.44932896      0.30119421      0.20189652      0.13533528]
