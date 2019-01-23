@@ -360,3 +360,10 @@ Le système linéaire à résoudre est  y' = Ay avec A = diag(-1,-2), qui a pour
 [1.      0.81873075      0.67032005      0.54881164      0.44932896      0.36787944]
 
 [1.      0.67032005      0.44932896      0.30119421      0.20189652      0.13533528]
+
+**Graphe de l'erreur en fonction de h (distance euclidienne)**
+
+[![erreur](./img/erreur.png)](img/erreur.png)
+
+Sur ce graphe, on s'apperçoit que la méthode d'Euler explicite (bleu) est celle qui commet la plus grosse erreur.
+Les trois autres méthodes sont similaires dans ce cas.
