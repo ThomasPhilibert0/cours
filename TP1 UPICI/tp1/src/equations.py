@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-
+from scipy import linalg
 # Fonction f(t,y), second membre d'équations différentielles d'ordre 1
 # écrite sous la forme d'un problème de Cauchy, y'(t) = f(t,y(t)) avec
 # y(0)=y0
@@ -53,9 +53,12 @@ def sol_trig(t):
 
     return np.sin(t) + np.cos(t)
 
-def f_diff(A,y):
+def f_diff(t,A,y):
     """Fonction différentielle de la forme y'(t) = Ay(t)"""
     return np.dot(A,y)
 
 
+def f_exact(t,A,y0):
+    """Solution du système différentielle y'(t)=Ay(t)"""
+    return np.dot(linalg.expm(A*t),y0)
     

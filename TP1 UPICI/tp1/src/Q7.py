@@ -13,11 +13,10 @@ def EQDiff() :
     T = 1.
     h = 0.2
     
-    print("Valeur de l'erreur en fonction de h")
     
     N = int(T/h)  
-    [t,y1] = methodesQ7.euler_explicite(t0,h,N,y0,equations.f_diff,2,A)
-        
-        
-       
+    [t,y1] = methodesQ7.saute_mouton(t0,h,N,y0,equations.f_diff,2,A)
+ 
+    
+    
     return y1
