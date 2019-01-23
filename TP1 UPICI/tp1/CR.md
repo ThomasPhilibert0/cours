@@ -14,9 +14,9 @@
 | 0.00625 | 0.0018654552588085824 |
 
 **Comparaison avec la solution exacte**
-![Fonction1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/EulerExF1.png)
+[![EulerExF1](./img/EulerExF1.png)](img/EulerExF1.png)
 **Graphe de convergence**
-![Fonction1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/EulerExF1Err.png)
+[![EulerExF1Err](./img/EulerExF1Err.png)](img/EulerExF1Err.png)
 
 ### 2. Euler explicite pour y'(t) = 1-y^2 avec y(0) = 0
 **Valeur de l'erreur en fonction de h:**
@@ -30,9 +30,11 @@
 |0.0125 | 0.0030783025937682084  |
 
 **Comparaison avec la solution exacte**
-![Fonction2C1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/EulerExF2C1.png)
+[![EulerExF2C1](./img/EulerExF2C1.png)](img/EulerExF2C1.png)
+
 **Graphe de convergence**
-![Fonction2C1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/EulerExF2C1Err.png)
+[![EulerExF2C1Err](./img/EulerExF2C1Err.png)](img/EulerExF2C1Err.png)
+
 
 ### Euler explicite pour y'(t) = 1-y^2 avec y(0) = 2
 **Valeur de l'erreur en fonction de h:**
@@ -46,9 +48,10 @@
 | 0.0125 | 0.00500229386518795|
 
 **Comparaison avec la solution exacte**
-![Fonction2C2](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/EulerExF2C2.png)
+[![EulerExF2C2](./img/EulerExF2C2.png)](img/EulerExF2C2.png)
 **Graphe de convergence**
-![Fonction2C2Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/EulerExF2C2Err.png)
+[![EulerExF2C2Err](./img/EulerExF2C2Err.png)](img/EulerExF2C2Err.png)
+
 ### 3. Runge-Kutta 2 pour y'(t) = 1-y avec y(0) = 5
 **Valeur de l'erreur en fonction de h:**
 
@@ -62,9 +65,9 @@
 | 0.00625 | 3.894467125035026e-06 |
 
 **Comparaison avec la solution exacte**
-![Rk2F1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/RK2F1.png)
+[![RK2F1](./img/RK2F1.png)](img/RK2F1.png)
 **Graphe de convergence**
-![Rk2F1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/RK2F1Err.png)
+[![RK2F1Err](./img/RK2F1Err.png)](img/RK2F1Err.png)
 
 ### Runge-Kutta pour y'(t) = 1-y^2 avec y(0) = 0
 **Valeur de l'erreur en fonction de h:**
@@ -78,9 +81,10 @@
 | 0.0125 | 1.3018256322779525e-05 |
 
 **Comparaison avec la solution exacte**
-![Rk2F2C1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/RK2F2C1.png)
+[![RK2F2C1](./img/RK2F2C1.png)](img/RK2F2C1.png)
 **Graphe de convergence**
-![Rk2F2C1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/RK2F2C1Err.png)
+[![Rk2F2C1Err](./img/Rk2F2C1Err.png)](img/Rk2F2C1Err.png)
+
 
 ### Runge-Kutta pour y'(t) = 1-y^2 avec y(0) = 2
 **Valeur de l'erreur en fonction de h:**
@@ -94,9 +98,9 @@
 | 0.0125 | 7.553937980781941e-05 |
 
 **Comparaison avec la solution exacte**
-![Rk2F2C2](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/RK2F2C2.png)
+[![RK2F2C2](./img/RK2F2C2.png)](img/RK2F2C2.png)
 **Graphe de convergence**
-![Rk2F2C2Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/RK2F2C2Err.png)
+[![RK2F2C2Err](./img/RK2F2C2Err.png)](img/RK2F2C2Err.png)
 
 ### 3bis. Comparaison des converges
 **y'(t) = 1-y avec y(0) = 5
@@ -122,9 +126,10 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.00625 | 3.875820817240393e-06 |
 
 **Comparaison avec la solution exacte**
-![SmF1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/SMF1.png)
+[![SMF1](./img/SMF1.png)](img/SMF1.png)
 **Graphe de convergence**
-![SmF1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/SMF1Err.png)
+[![SMF1Err](./img/SMF1Err.png)](img/SMF1Err.png)
+
 
 ### Méthode de Saute-Mouton pour y'(t) = 1-y^2 avec y(0) = 0
 **Valeur de l'erreur en fonction de h:**
@@ -138,9 +143,10 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.0125 | 5.205431190321056e-05 |
 
 **Comparaison avec la solution exacte**
-![SmF2C1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/SMF2C1.png)
+[![SMF2C1](./img/SMF2C1.png)](img/SMF2C1.png)
 **Graphe de convergence**
-![SmF2C1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/SMF2C1Err.png)
+[![SMF2C1Err](./img/SMF2C1Err.png)](img/SMF2C1Err.png)
+
 
 ### Méthode de Saute-Mouton pour y'(t) = 1-y^2 avec y(0) = 2
 **Valeur de l'erreur en fonction de h:**
@@ -154,9 +160,9 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.0125 | 9.228116827941486e-05 |
 
 **Comparaison avec la solution exacte**
-![SmF2C2](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/SMF2C2.png)
+[![SMF2C2](./img/SMF2C2.png)](img/SMF2C2.png)
 **Graphe de convergence**
-![SmF2C2Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/SMF2C2Err.png)
+[![SMF2C2Err](./img/SMF2C2Err.png)](img/SMF2C2Err.png)
 
 ### 5. Méthode du Trapèze (Prédiction-Correcteur) pour y'(t) = 1-y avec y(0) = 5
 **Valeur de l'erreur en fonction de h:**
@@ -171,9 +177,9 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.00625 | 3.8944671248553435e-06 |
 
 **Comparaison avec la solution exacte**
-![TPCF1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TPCF1.png)
+[![TPCF1](./img/TPCF1.png)](img/TPCF1.png)
 **Graphe de convergence**
-![TPCF1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TPCF1Err.png)
+[![TPCF1Err](./img/TPCF1Err.png)](img/TPCF1Err.png)
 
 ### Méthode de Trapèze (Prédiction-Correcteur) pour y'(t) = 1-y^2 avec y(0) = 0
 **Valeur de l'erreur en fonction de h:**
@@ -187,9 +193,10 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.0125 | 2.748082416725165e-05 |
 
 **Comparaison avec la solution exacte**
-![TPCF2C1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TPCF2C1.png)
+[![TPCF2C1](./img/TPCF2C1.png)](img/TPCF2C1.png)
 **Graphe de convergence**
-![TPCF2C1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TPCF2C1Err.png)
+[![TPCF2C1Err](./img/TPCF2C1Err.png)](img/TPCF2C1Err.png)
+
 
 ### Méthode de Trapèze (Prédiction-Correcteur) pour y'(t) = 1-y^2 avec y(0) = 2
 **Valeur de l'erreur en fonction de h:**
@@ -203,9 +210,9 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.0125 | 5.836645027214847e-05 |
 
 **Comparaison avec la solution exacte**
-![TPCF2C2](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TPCF2C2.png)
+[![TPCF2C2](./img/TPCF2C2.png)](img/TPCF2C2.png)
 **Graphe de convergence**
-![TPCF2C2Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TPCF2C2Err.png)
+[![TPCF2C2Err](./img/TPCF2C2Err.png)](img/TPCF2C2Err.png)
 
 ### 5bis. Méthode du Trapèze (Newton) pour y'(t) = 1-y avec y(0) = 5
 **Valeur de l'erreur en fonction de h:**
@@ -220,9 +227,10 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.00625 | 1.9381277485219057e-06 |
 
 **Comparaison avec la solution exacte**
-![TNF1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TPNF1.png)
+[![TNF1](./img/TNF1.png)](img/TNF1.png)
 **Graphe de convergence**
-![TNF1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TNF1Err.png)
+[![TNF1Err](./img/TNF1Err.png)](img/TNF1Err.png)
+
 
 ### Méthode de Trapèze (Newton) pour y'(t) = 1-y^2 avec y(0) = 0
 **Valeur de l'erreur en fonction de h:**
@@ -236,9 +244,9 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.0125 | 2.603407287806165e-05 |
 
 **Comparaison avec la solution exacte**
-![TNF2C1](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TNF2C1.png)
+[![TNF2C1](./img/TNF2C1.png)](img/TNF2C1.png)
 **Graphe de convergence**
-![TNF2C1Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TNF2C1Err.png)
+[![TNF2C1Err](./img/TNF2C1Err.png)](img/TNF2C1Err.png)
 
 ### Méthode de Trapèze (Newton) pour y'(t) = 1-y^2 avec y(0) = 2
 **Valeur de l'erreur en fonction de h:**
@@ -252,19 +260,20 @@ On remarque bien que la méthode de Runge-Kutta d'ordre 2 est plus précise et c
 | 0.0125 | 4.461033000169874e-05 |
 
 **Comparaison avec la solution exacte**
-![TNF2C2](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TNF2C2.png)
+[![TNF2C2](./img/TNF2C2.png)](img/TNF2C2.png)
 **Graphe de convergence**
-![TNF2C2Err](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/TNF2C2Err.png)
+[![TNF2C2Err](./img/TNF2C2Err.png)](img/TNF2C2Err.png)
 
 ### 6. Comparaison des 4 méthodes (Euler, RK2, Saute-Mouton, Trapèze PC)
 Comparaison des méthodes y'(t) = a*y(t) + (1-a)*cos(t) - (1+a)*sin(t), avec y(0)=1.
 
-![ErreurComp4](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/ErreurComp4.png)
+[![ErreurComp4](./img/ErreurComp4.png)](img/ErreurComp4.png)
 
-![Comp4h05](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/Comp4h05.png)
+[![Comp4h05](./img/Comp4h05.png)](img/Comp4h05.png)
 
-![Comp4h01](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/Comp4h01.png)
+[![Comp4h01](./img/Comp4h01.png)](img/Comp4h01.png)
 
-![Comp4h001](https://github.com/ThomasPhilibert0/cours/tree/master/TP1%20UPICI/tp1/img/Comp4h001.png)
+[![Comp4h001](./img/Comp4h001.png)](img/Comp4h001.png)
+
 
 ## Séance 
