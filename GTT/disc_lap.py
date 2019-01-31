@@ -21,20 +21,24 @@ def matrix_lap(N):
 
     #Diagonale principale
     diags[2,:] = 1.
-    diags[2,np.arange(N+2, taille - (N+2),N+1)] = -4./h2
-    diags[2,np.arange(N+3, taille - (N+1),N+1)] = -4./h2
-
+    diags[2,N+2:taille- (N+2)] = -4./h2
+    diags[2,np.arange(2*N+1, taille, N+1)] = 1.
+    diags[2,np.arange(2*N+2, taille, N+1)] = 1.
+              
     #Diagonale "-1"
-    diags[1,np.arange(N+1, taille -(N+2),N+1)] = 1./h2
-    diags[1,np.arange(N+2, taille -(N+1),N+1)] = 1./h2
+    diags[1,N+1:taille-(N+1)] = 1./h2
+    diags[1,np.arange(2*N, taille, N+1)] = 0.
+    diags[1,np.arange(2*N+1, taille, N+1)] = 0.
     
     #Diagonale "+1"
-    diags[3,np.arange(N+3, taille -(N+1),N+1)] = 1./h2
-    diags[3,np.arange(N+4, taille -N,N+1)] = 1./h2
+    diags[3,N+3:taille-(N+1)] = 1./h2
+    diags[3,np.arange(2*N+2, taille, N+1)] = 0.
+    diags[3,np.arange(2*N+3, taille, N+1)] = 0.
 
     #Diagonale "-(N+1)"
-    diags[0,np.arange(1,taille -2*N+3,N+1)] = 1./h2
-    diags[0,np.arange(2,taille -2*(N+1),N+1)] = 1./h2
+    diags[0,1: taille - (2*N+3)] = 1./h2
+    diags[0,np.arange(3,taille,N+1)] = 0.
+    diags[0,np.arange(4,taille,N+1)] = 0.
 
     #Diagonale "+(N+1)"
     diags[4,np.arange(2*N+3,taille -1,N+1)] = 1./h2
@@ -58,8 +62,8 @@ def sol_disc(N):
     F = np.zeros((N+1)*(N+1))   #Allocation mémoire de f
     V = np.zeros((N+1)*(N+1))   #Allocation mémoire sol exacte
 
-    for i in np.arange(N+1):
-        for j in np.arange(N+1):
+    for i in np.arange(1,N-1):
+        for j in np.arange(1,N-1):
             k = i + j*(N+1)
             F[k] = -f(x[i],y[i])
             V[k] = u(x[i],y[i])
@@ -90,4 +94,5 @@ def sol_disc(N):
     
     plt.show()
 
-
+    err = np.max(np.abs(V - U))    
+    print(err)
