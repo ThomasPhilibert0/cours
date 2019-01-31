@@ -21,28 +21,29 @@ def matrix_lap(N):
 
     #Diagonale principale
     diags[2,:] = 1.
-    diags[2,N+2:taille- (N+2)] = -4./h2
-    diags[2,np.arange(2*N+1, taille, N+1)] = 1.
-    diags[2,np.arange(2*N+2, taille, N+1)] = 1.
+    diags[2, N+2:taille - (N+2)] = -4./h2
+    diags[2, np.arange(2*N+1, taille, N+1)] = 1.
+    diags[2, np.arange(2*N+2, taille, N+1)] = 1.
               
     #Diagonale "-1"
     diags[1,N+1:taille-(N+1)] = 1./h2
-    diags[1,np.arange(2*N, taille, N+1)] = 0.
-    diags[1,np.arange(2*N+1, taille, N+1)] = 0.
+    diags[1, np.arange(2*N, taille, N+1)] = 0.
+    diags[1, np.arange(2*N+1, taille, N+1)] = 0.
     
     #Diagonale "+1"
-    diags[3,N+3:taille-(N+1)] = 1./h2
-    diags[3,np.arange(2*N+2, taille, N+1)] = 0.
-    diags[3,np.arange(2*N+3, taille, N+1)] = 0.
+    diags[3, N+3:taille-(N+1)] = 1./h2
+    diags[3, np.arange(2*N+2, taille, N+1)] = 0.
+    diags[3, np.arange(2*N+3, taille, N+1)] = 0.
 
     #Diagonale "-(N+1)"
-    diags[0,1: taille - (2*N+3)] = 1./h2
-    diags[0,np.arange(3,taille,N+1)] = 0.
-    diags[0,np.arange(4,taille,N+1)] = 0.
+    diags[0, 1 : taille - (2*N+3)] = 1./h2
+    diags[0, np.arange(N,taille,N+1)] = 0.
+    diags[0, np.arange(N+1,taille,N+1)] = 0.
 
     #Diagonale "+(N+1)"
-    diags[4,np.arange(2*N+3,taille -1,N+1)] = 1./h2
-    diags[4,np.arange(2*N+4,taille ,N+1)] = 1./h2
+    diags[4, taille - N*N + 2 : taille - 1] = 1./h2
+    diags[4, np.arange(taille - N*N + 1 + N ,taille,N+1)] = 0.
+    diags[4, np.arange(taille - N*N + 2 + N ,taille,N+1)] = 0.
 
     #Construction de la matrice creuse
     A = sparse.spdiags(diags,[-(N+1),-1,0,1,(N+1)],taille,taille, format = "csr")
@@ -62,11 +63,15 @@ def sol_disc(N):
     F = np.zeros((N+1)*(N+1))   #Allocation mémoire de f
     V = np.zeros((N+1)*(N+1))   #Allocation mémoire sol exacte
 
-    for i in np.arange(1,N-1):
-        for j in np.arange(1,N-1):
+    for i in np.arange(1,N):
+        for j in np.arange(1,N):
             k = i + j*(N+1)
-            F[k] = -f(x[i],y[i])
-            V[k] = u(x[i],y[i])
+            F[k] = f(x[i],y[j])
+
+    for i in np.arange(N+1):
+        for j in np.arange(N+1):
+            k = i + j*(N+1)
+            V[k] = u(x[i],y[j])
 
     U = np.zeros((N+1)*(N+1)) #matrice pour la solution
     A = matrix_lap(N)
@@ -93,6 +98,17 @@ def sol_disc(N):
     plt.title("Solution exacte")
     
     plt.show()
+    
+    err2 = np.sum((V-U)**2)/((N+1)**2)
+    err1 = np.max(np.abs(V - U))    
 
-    err = np.max(np.abs(V - U))    
-    print(err)
+    print("{:8s} {:12s}".
+          format("Taille", "erreur demandée"))
+    print("{:8d} {:12.5e}".
+          format((N+1)*(N+1), err2))
+    
+    print("{:8s} {:12s}".
+          format("Taille", "erreur absolue"))
+    print("{:8d} {:12.5e}".
+          format((N+1)*(N+1), err1))
+    
