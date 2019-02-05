@@ -135,8 +135,3 @@ def graphe_erreur(N):
     plt.show()
         
 
-## def chaleur(N,t,nbiter):
-##     Id_sp = sparse.eye(N+1)
-##     T = np.zeros(
-  #  for i in range(1,t):
-        
