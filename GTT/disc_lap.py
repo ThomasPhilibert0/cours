@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.sparse as sparse   # Algèbre linéaire creuse
 import matplotlib.pyplot as plt # Pour les graphiques
-from scipy.sparse.linalg import spsolve
+import scipy.sparse.linalg as sci
 from mpl_toolkits.mplot3d import Axes3D
 
 
@@ -59,56 +59,84 @@ def u(x1,x2):
 def sol_disc(N):
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
-
     F = np.zeros((N+1)*(N+1))   #Allocation mémoire de f
-    V = np.zeros((N+1)*(N+1))   #Allocation mémoire sol exacte
 
-    for i in np.arange(1,N):
+    for i in np.arange(1,N):    #(1,N) car on veut que ce soit 0 sur les bords
         for j in np.arange(1,N):
             k = i + j*(N+1)
             F[k] = f(x[i],y[j])
 
-    for i in np.arange(N+1):
-        for j in np.arange(N+1):
-            k = i + j*(N+1)
-            V[k] = u(x[i],y[j])
-
-    U = np.zeros((N+1)*(N+1)) #matrice pour la solution
+    U = np.zeros((N+1)*(N+1))   #matrice pour la solution
     A = matrix_lap(N)
-
-    #plt.spy(A)
-    #plt.show()
         
-    U = spsolve(A,F)
+    U = sci.spsolve(A,F)
+    
+    return U
+    
+def sol_exacte(N):
+        x = np.linspace(0,1,N+1)
+        y = np.linspace(0,1,N+1)
+        V = np.zeros((N+1)*(N+1))   #Allocation mémoire sol exacte
+        for i in np.arange(N+1):
+            for j in np.arange(N+1):
+                k = i + j*(N+1)
+                V[k] = u(x[i],y[j])
 
-    fig = plt.figure(1)
-    ax = Axes3D(fig)
+        return V
+
+def affichage(N):
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    
+    U = sol_disc(N)
+    V = sol_exacte(N)
+
+ 
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    
+    ax = fig.add_subplot(1,2,1,projection='3d')
     X,Y = np.meshgrid(x,y)
     ax.plot_surface(X,Y, U.reshape((N+1,N+1)), cmap='hot')
-    plt.xlabel("x")
-    plt.ylabel("y")
     plt.title("Solution discrétisée")
-    
-    fig2 = plt.figure(2)
-    ax = Axes3D(fig2)
-    X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,V.reshape((N+1,N+1)),cmap = 'hot')
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title("Solution exacte")
-    
-    plt.show()
-    
-    err2 = np.sum((V-U)**2)/((N+1)**2)
-    err1 = np.max(np.abs(V - U))    
 
-    print("{:8s} {:12s}".
-          format("Taille", "erreur demandée"))
-    print("{:8d} {:12.5e}".
-          format((N+1)*(N+1), err2))
-    
-    print("{:8s} {:12s}".
-          format("Taille", "erreur absolue"))
-    print("{:8d} {:12.5e}".
-          format((N+1)*(N+1), err1))
-    
+
+    ax = fig.add_subplot(1,2,2,projection='3d')
+    ax.plot_surface(X,Y,V.reshape((N+1,N+1)),cmap = 'hot')
+    plt.title("Solution exacte")
+    plt.show()
+
+def erreur_eucl(A,E,N):
+    return np.sqrt(np.sum((E-A)**2)/((N+1)**2))
+
+def erreur_abs(A,E,N):
+    return np.max(np.abs(E - A))
+
+def graphe_erreur(N):
+    tab_err = np.zeros(N)
+    tab_err2 = np.zeros(N)
+
+    for i in range(1,N):        
+        U = sol_disc(i+1)
+        V = sol_exacte(i+1)
+
+        tab_err[i] = erreur_eucl(U,V,i)
+        tab_err2[i] = erreur_abs(U,V,i)
+
+        plt.plot(i,tab_err[i],color='blue',marker='o')
+        plt.plot(i,tab_err2[i],color='green',marker='+')
+        plt.xscale("log")
+        plt.yscale("log")
+        plt.xlabel('N')
+        plt.ylabel('Erreur log: Eucl (bleu), Abs (vert)')
+
+    plt.show()
+        
+
+## def chaleur(N,t,nbiter):
+##     Id_sp = sparse.eye(N+1)
+##     T = np.zeros(
+  #  for i in range(1,t):
+        
