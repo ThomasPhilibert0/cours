@@ -16,7 +16,7 @@ def fh(x,y):
 def sol_disc_inter(N):
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
-    F = np.zeros((N+1)*(N+1)) 
+    F = np.ones((N+1)*(N+1)) 
 
     for i in np.arange(1,N):    #(1,N) car on veut que ce soit 0 sur les bords
         for j in np.arange(1,N):
@@ -27,8 +27,24 @@ def sol_disc_inter(N):
                 F[k] = fb(x[i],y[j])
                 
 
-    U = np.zeros((N+1)*(N+1))   #matrice pour la solution
+    U = np.ones((N+1)*(N+1))   #matrice pour la solution
     A = disc_lap.matrix_lap(N)
         
     U = sci.spsolve(A,F)
     return U
+
+def affichage_inter(N):
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    
+    U = sol_disc_inter(N)
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    
+    ax = fig.add_subplot(1,2,1,projection='3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y, U.reshape((N+1,N+1)), cmap='hot')
+    plt.title("Solution discrétisée")
+    plt.xlabel("x")
+    plt.ylabel("y")
+
