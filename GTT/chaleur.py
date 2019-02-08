@@ -14,61 +14,75 @@ def matrix_lap(N,dt):
 
     #Cela correspond à x_i = i*h et y_j = j*h et la numérotation (i,j) --> k := (N+1)*j+i.
 
-    taille = (1+N)*(1+N)
+    taille = (N-1)*(N-1)
 
     diags = np.zeros((5,taille))
 
     #Diagonale principale
-    diags[2,:] = 1.
-    diags[2, N+2:taille - (N+2)] = -(4*dt)/h2
-    diags[2, np.arange(2*N+1, taille, N+1)] = 1.
-    diags[2, np.arange(2*N+2, taille, N+1)] = 1.
+    diags[2,:] = -(4*dt)/h2
               
     #Diagonale "-1"
-    diags[1,N+1:taille-(N+1)] = 1./h2
-    diags[1, np.arange(2*N, taille, N+1)] = 0.
-    diags[1, np.arange(2*N+1, taille, N+1)] = 0.
+    diags[1,:] = dt/h2
     
     #Diagonale "+1"
-    diags[3, N+3:taille-(N+1)] = 1./h2
-    diags[3, np.arange(2*N+2, taille, N+1)] = 0.
-    diags[3, np.arange(2*N+3, taille, N+1)] = 0.
+    diags[3,:] = dt/h2
 
     #Diagonale "-(N+1)"
-    diags[0, 1 : taille - (2*N+3)] = 1./h2
-    diags[0, np.arange(N,taille,N+1)] = 0.
-    diags[0, np.arange(N+1,taille,N+1)] = 0.
+    diags[0,:] = dt/h2
 
     #Diagonale "+(N+1)"
-    diags[4, taille - N*N + 2 : taille - 1] = 1./h2
-    diags[4, np.arange(taille - N*N + 1 + N ,taille,N+1)] = 0.
-    diags[4, np.arange(taille - N*N + 2 + N ,taille,N+1)] = 0.
+    diags[4,:] = dt/h2
 
     #Construction de la matrice creuse
-    A = sparse.spdiags(diags,[-(N+1),-1,0,1,(N+1)],taille,taille, format = "csr")
+    A = sparse.spdiags(diags,[-(N-1),-1,0,1,(N-1)],taille,taille, format = "csr")
 
     return A
 
-def f(x1,x2):
-    return 6.*(1.-3.*x1+2.*x1**2)*((x2-1.)**3)*x2 + 6.*(1.-3.*x2+2.*x2**2)*((x1-1.)**3)*x1
-
-def chaleur (N,dt,T):
+def chaleur (N,dt,t):
+    
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
-    taille = (N+1)*(N+1)
+    taille1 = (N-1)*(N-1)
 
-    F = np.zeros(taille)      #Allocation mémoire de f
-    I = sparse.eye(taille)
-    temps = np.zeros(T)       #Allocation tableau des temps
+    T = np.zeros((t,N+1,N+1))          #Initialisation de la solution finale
+    U = np.ones(taille1)               #Initialisation matrice pour discrétisaiton
+    I = sparse.eye(taille1)            #Matrice de l'identité
 
-    for i in range (1,N):
-        for j in range (1,N):
-            k = i + j*(N+1)
-            F[k] = f(x[i],y[j])
+    LAP = (I - matrix_lap(N,dt))       #La matrice a inverser
 
-    for t in range (0,T):
-       C = I -  matrix_lap(N,dt)
-       temps[t+1] = sci.spsolve(C,(temps[t]- F))
+    for i in range(t):
+        U = sci.spsolve(LAP,U)
+        T[i,1:N,1:N] = U.reshape(N-1,N-1).copy()
 
-    return temps  
+        
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    
+    ax = fig.add_subplot(1,2,1, projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,T[1,:,:] ,cmap='hot')
+    plt.title("Solution au temps t = 1")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    
+    ax = fig.add_subplot(1,2,2, projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,T[t-1,:,:],cmap='hot')
+    plt.title("Solution au temps t =" +str(t))
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    #fig2 = plt.figure()
+    #ax = fig.add_subplot(1,2,1)
+    #plt.pcolormesh(x,y,T[1,:,:], cmap = 'seismic' , shading = 'flat')
+    #plt.axis('image')
+    #plt.draw()
+
+    #ax = fig.add_subplot(1,2,2)
+    #plt.pcolormesh(x,y,T[t-1,:,:], cmap = 'seismic', shading = 'flat')
+    #plt.axis('image')
+    #plt.draw()
+          
+    plt.show()
+
+    
