@@ -16,18 +16,18 @@ def fh(x,y):
 def sol_disc_inter(N):
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
-    F = np.ones((N+1)*(N+1)) 
+    F = np.zeros((N+1)*(N+1)) 
 
-    for i in np.arange(1,N):    #(1,N) car on veut que ce soit 0 sur les bords
-        for j in np.arange(1,N):
+    for i in np.arange(0,N+1):    #(1,N) car on veut que ce soit 0 sur les bords
+        for j in np.arange(0,N+1):
             k = i + j*(N+1)
             if (i <= (N/2.) and j == 0):
                 F[k] = fb(x[i],y[j])
             elif (i >= (N/2.) and j == N):
-                F[k] = fb(x[i],y[j])
+                F[k] = fh(x[i],y[j])
                 
 
-    U = np.ones((N+1)*(N+1))   #matrice pour la solution
+    U = np.zeros((N+1)*(N+1))   #matrice pour la solution
     A = disc_lap.matrix_lap(N)
         
     U = sci.spsolve(A,F)
