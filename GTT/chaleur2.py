@@ -60,7 +60,7 @@ def chaleur0(N,dt,t):
 
      taille1 = (N+1)*(N+1)
 
-     T = np.zeros((t,taille1))          #Initialisation de la solution finale
+     T = np.zeros((t+1,taille1))          #Initialisation de la solution finale
      T[0,N+2:taille1 - N-2] = 1.
      T[0,np.arange(2*N+1, taille1, N+1)] = 0
      T[0,np.arange(2*N+2, taille1, N+1)] = 0
@@ -68,60 +68,78 @@ def chaleur0(N,dt,t):
      for i in range (1,t):
          T[i,:] = sci.spsolve(matrix_lap2(N,dt),T[i-1,:])
 
-
-     fig = plt.figure(figsize = plt.figaspect(0.35))
+     return T
+     #fig = plt.figure(figsize = plt.figaspect(0.35))
     
-     ax = fig.add_subplot(1,2,1, projection = '3d')
-     X,Y = np.meshgrid(x,y)
-     ax.plot_surface(X,Y,T[1,:].reshape(N+1,N+1) ,cmap='hot')
-     plt.title("Solution au temps t = 1")
-     plt.xlabel("x")
-     plt.ylabel("y")
+     #ax = fig.add_subplot(1,2,1, projection = '3d')
+     #X,Y = np.meshgrid(x,y)
+     #ax.plot_surface(X,Y,T[1,:].reshape(N+1,N+1) ,cmap='hot')
+     #plt.title("Solution au temps t = 1")
+     #plt.xlabel("x")
+     #plt.ylabel("y")
     
-     ax = fig.add_subplot(1,2,2, projection = '3d')
-     X,Y = np.meshgrid(x,y)
-     ax.plot_surface(X,Y,T[t-1,:].reshape(N+1,N+1),cmap='hot')
-     plt.title("Solution au temps t =" +str(t))
-     plt.xlabel("x")
-     plt.ylabel("y")
+     #ax = fig.add_subplot(1,2,2, projection = '3d')
+     #X,Y = np.meshgrid(x,y)
+     #ax.plot_surface(X,Y,T[t-1,:].reshape(N+1,N+1),cmap='hot')
+     #plt.title("Solution au temps t =" +str(t))
+     #plt.xlabel("x")
+     #plt.ylabel("y")
 
-     plt.show()
+     #plt.show()
 
 
 def chaleur_ex(N,dt,t):
     
-     x = np.linspace(0,1,N+1)
-     y = np.linspace(0,1,N+1)
-     
-     taille1 = (N+1)*(N+1)
-
-     V = np.zeros((t+1,taille1))                             #Allocation mémoire sol exacte
-     for i in np.arange(N+1):
-         for j in np.arange(N+1):
-             k = i + j*(N+1)
-             V[0,k] = u(x[i],y[j])
-
-
-     for i in range (t):
-         V[i+1,:] = sci.spsolve(matrix_lap2(N,dt),V[i,:])
-
-             
-     fig = plt.figure(figsize = plt.figaspect(0.35))
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
     
-     ax = fig.add_subplot(1,2,1, projection = '3d')
-     X,Y = np.meshgrid(x,y)
-     ax.plot_surface(X,Y,V[0,:].reshape(N+1,N+1) ,cmap='hot')
-     plt.title("Solution au temps t = 0")
-     plt.xlabel("x")
-     plt.ylabel("y")
-    
-     ax = fig.add_subplot(1,2,2, projection = '3d')
-     X,Y = np.meshgrid(x,y)
-     ax.plot_surface(X,Y,V[t,:].reshape(N+1,N+1),cmap='hot')
-     plt.title("Solution au temps t =" +str(t))
-     plt.xlabel("x")
-     plt.ylabel("y")
+    taille1 = (N+1)*(N+1)
 
-     plt.show()
+    V = np.zeros((t+1,taille1))                             #Allocation mémoire sol exacte
+    for i in np.arange(N+1):
+        for j in np.arange(N+1):
+            k = i + j*(N+1)
+            V[0,k] = u(x[i],y[j])
+
+    for i in range (t):
+        V[i+1,:] = sci.spsolve(matrix_lap2(N,dt),V[i,:])
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
     
-     print(np.max(V[t,:]))
+    ax = fig.add_subplot(1,2,1, projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,V[0,:].reshape(N+1,N+1) ,cmap='hot')
+    plt.title("Solution au temps t = 0")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    
+    ax = fig.add_subplot(1,2,2, projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,V[t,:].reshape(N+1,N+1),cmap='hot')
+    plt.title("Solution au temps t =" +str(t))
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
+    
+    print(np.max(V[t,:]))
+
+def dist(N,dt):
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    T = chaleur0(N,dt,2)
+
+    dist  = - np.log(T[2,:])*(dt*dt)
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    
+    ax = fig.add_subplot(111, projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,dist.reshape(N+1,N+1) ,cmap='hot')
+    plt.title("Solution au temps t = 0")
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
