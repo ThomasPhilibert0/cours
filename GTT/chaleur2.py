@@ -123,17 +123,18 @@ def chaleur_ex(N,dt,t):
     print(np.max(V[t,:]))
 
 
-def chaleur0(N,dt,t):
+def chaleurdist(N,dt,t):
 
      x = np.linspace(0,1,N+1)
      y = np.linspace(0,1,N+1)
 
      taille1 = (N+1)*(N+1)
 
-     T = np.zeros((t+1,taille1))          #Initialisation de la solution finale
-     T[0,N+2:taille1 - N-2] = 1.
-     T[0,np.arange(2*N+1, taille1, N+1)] = 0
-     T[0,np.arange(2*N+2, taille1, N+1)] = 0
+     T = np.ones((t+1,taille1))          #Initialisation de la solution finale
+     T[0,N+2:taille1 - N-2] = 0
+     T[0,np.arange(2*N+1, taille1, N+1)] = 1.
+     T[0,np.arange(2*N+2, taille1, N+1)] = 1.
+
 
      for i in range (t):
          T[i+1,:] = sci.spsolve(matrix_lap2(N,dt),T[i,:])
@@ -145,9 +146,9 @@ def dist(N,dt):
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
-    T = chaleur0(N,dt,2)
+    T = chaleurdist(N,dt,1)
 
-    dist  = - np.log(T[2,:])*(dt*dt)
+    dist  = - np.log(T[1,:])*np.sqrt(dt)
 
     fig = plt.figure(figsize = plt.figaspect(0.35))
     
@@ -158,4 +159,6 @@ def dist(N,dt):
     plt.xlabel("x")
     plt.ylabel("y")
 
+    print(np.max(dist))
+    
     plt.show()
