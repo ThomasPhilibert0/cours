@@ -53,7 +53,7 @@ def u(x1,x2):
     return x1*x2*((x1-1.)**3)*((x2-1))**3
 
 
-def chaleur0(N,dt,t):
+def chaleur0_aff(N,dt,t):
 
      x = np.linspace(0,1,N+1)
      y = np.linspace(0,1,N+1)
@@ -65,28 +65,26 @@ def chaleur0(N,dt,t):
      T[0,np.arange(2*N+1, taille1, N+1)] = 0
      T[0,np.arange(2*N+2, taille1, N+1)] = 0
 
-     for i in range (1,t):
-         T[i,:] = sci.spsolve(matrix_lap2(N,dt),T[i-1,:])
+     for i in range (t):
+         T[i+1,:] = sci.spsolve(matrix_lap2(N,dt),T[i,:])
 
-     return T
-     #fig = plt.figure(figsize = plt.figaspect(0.35))
+     
+     fig = plt.figure(figsize = plt.figaspect(0.35))
+     ax = fig.add_subplot(1,2,1, projection = '3d')
+     X,Y = np.meshgrid(x,y)
+     ax.plot_surface(X,Y,T[0,:].reshape(N+1,N+1) ,cmap='hot')
+     plt.title("Solution au temps t = 0")
+     plt.xlabel("x")
+     plt.ylabel("y")
     
-     #ax = fig.add_subplot(1,2,1, projection = '3d')
-     #X,Y = np.meshgrid(x,y)
-     #ax.plot_surface(X,Y,T[1,:].reshape(N+1,N+1) ,cmap='hot')
-     #plt.title("Solution au temps t = 1")
-     #plt.xlabel("x")
-     #plt.ylabel("y")
-    
-     #ax = fig.add_subplot(1,2,2, projection = '3d')
-     #X,Y = np.meshgrid(x,y)
-     #ax.plot_surface(X,Y,T[t-1,:].reshape(N+1,N+1),cmap='hot')
-     #plt.title("Solution au temps t =" +str(t))
-     #plt.xlabel("x")
-     #plt.ylabel("y")
+     ax = fig.add_subplot(1,2,2, projection = '3d')
+     X,Y = np.meshgrid(x,y)
+     ax.plot_surface(X,Y,T[t,:].reshape(N+1,N+1),cmap='hot')
+     plt.title("Solution au temps t =" +str(t))
+     plt.xlabel("x")
+     plt.ylabel("y")
 
-     #plt.show()
-
+     plt.show()
 
 def chaleur_ex(N,dt,t):
     
@@ -123,6 +121,24 @@ def chaleur_ex(N,dt,t):
     plt.show()
     
     print(np.max(V[t,:]))
+
+
+def chaleur0(N,dt,t):
+
+     x = np.linspace(0,1,N+1)
+     y = np.linspace(0,1,N+1)
+
+     taille1 = (N+1)*(N+1)
+
+     T = np.zeros((t+1,taille1))          #Initialisation de la solution finale
+     T[0,N+2:taille1 - N-2] = 1.
+     T[0,np.arange(2*N+1, taille1, N+1)] = 0
+     T[0,np.arange(2*N+2, taille1, N+1)] = 0
+
+     for i in range (t):
+         T[i+1,:] = sci.spsolve(matrix_lap2(N,dt),T[i,:])
+
+     return T
 
 def dist(N,dt):
 
