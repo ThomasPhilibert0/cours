@@ -3,6 +3,7 @@ import scipy.sparse as sparse   # Algèbre linéaire creuse
 import matplotlib.pyplot as plt # Pour les graphiques
 import scipy.sparse.linalg as sci
 from mpl_toolkits.mplot3d import Axes3D
+import time
 
 
 def matrix_lap(N):
@@ -66,13 +67,13 @@ def sol_disc(N):
             k = i + j*(N+1)
             F[k] = f(x[i],y[j])
 
-    U = np.zeros((N+1)*(N+1))   #matrice pour la solution
+    #U = np.zeros((N+1)*(N+1))   #matrice pour la solution
     A = matrix_lap(N)
         
-    U = sci.spsolve(A,F)
+    U = sci.cg(A,F)
     
-    return U
-    
+    return U[0]
+
 def sol_exacte(N):
         x = np.linspace(0,1,N+1)
         y = np.linspace(0,1,N+1)
@@ -85,6 +86,7 @@ def sol_exacte(N):
         return V
 
 def affichage(N):
+    start_time = time.time()
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
     
@@ -107,6 +109,8 @@ def affichage(N):
     ax.plot_surface(X,Y,V.reshape((N+1,N+1)),cmap = 'hot')
     plt.title("Solution exacte")
     plt.show()
+
+    print("Temps d execution : %s secondes -" %(time.time() - start_time))
 
 def erreur_eucl(A,E,N):
     return np.sqrt(np.sum((E-A)**2)/((N+1)**2))

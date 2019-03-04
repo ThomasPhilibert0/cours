@@ -66,14 +66,14 @@ def chaleur0_aff(N,dt,t):
      T[0,np.arange(2*N+2, taille1, N+1)] = 0
 
      for i in range (t):
-         T[i+1,:] = sci.spsolve(matrix_lap2(N,dt),T[i,:])
-
+         S = sci.cg(matrix_lap2(N,dt),T[i,:])
+         T[i+1,:] = S[0]
      
      fig = plt.figure(figsize = plt.figaspect(0.35))
      ax = fig.add_subplot(1,2,1, projection = '3d')
      X,Y = np.meshgrid(x,y)
-     ax.plot_surface(X,Y,T[0,:].reshape(N+1,N+1) ,cmap='hot')
-     plt.title("Solution au temps t = 0")
+     ax.plot_surface(X,Y,T[1,:].reshape(N+1,N+1) ,cmap='hot')
+     plt.title("Solution au temps t = 1")
      plt.xlabel("x")
      plt.ylabel("y")
     
@@ -100,14 +100,15 @@ def chaleur_ex(N,dt,t):
             V[0,k] = u(x[i],y[j])
 
     for i in range (t):
-        V[i+1,:] = sci.spsolve(matrix_lap2(N,dt),V[i,:])
-
+        S = sci.cg(matrix_lap2(N,dt),V[i,:])
+        V[i+1,:] = S[0]
+        
     fig = plt.figure(figsize = plt.figaspect(0.35))
     
     ax = fig.add_subplot(1,2,1, projection = '3d')
     X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,V[0,:].reshape(N+1,N+1) ,cmap='hot')
-    plt.title("Solution au temps t = 0")
+    ax.plot_surface(X,Y,V[1,:].reshape(N+1,N+1) ,cmap='hot')
+    plt.title("Solution au temps t = 1")
     plt.xlabel("x")
     plt.ylabel("y")
     
@@ -123,48 +124,47 @@ def chaleur_ex(N,dt,t):
     print(np.max(V[t,:]))
 
 
-def chaleurdist(N,dt,t):
+def chaleurdist(N,dt):
 
      x = np.linspace(0,1,N+1)
      y = np.linspace(0,1,N+1)
 
      taille1 = (N+1)*(N+1)
 
-     T = np.ones((t+1,taille1))          #Initialisation de la solution finale
-     T[0,N+2:taille1 - N-2] = 0
-     T[0,np.arange(2*N+1, taille1, N+1)] = 1.
-     T[0,np.arange(2*N+2, taille1, N+1)] = 1.
+     T = np.ones(taille1)          #Initialisation de la solution finale
+     T[N+2:taille1 - N-2] = 0
+     T[np.arange(2*N+1, taille1, N+1)] = 1.
+     T[np.arange(2*N+2, taille1, N+1)] = 1.
 
-
-     for i in range (t):
-         T[i+1,:] = sci.spsolve(matrix_lap2(N,dt),T[i,:])
-
-     return T
+     D = sci.spsolve(matrix_lap2(N,dt), T)
+         
+     return D
 
 def dist(N,dt):
 
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
-    T = chaleurdist(N,dt,1)
+    T = chaleurdist(N,dt)
 
-    dist  = - np.log(T[1,:])*np.sqrt(dt)
+    dist  = -np.log(T)*np.sqrt(dt)
+
+    print(np.max(dist))
 
     fig = plt.figure(figsize = plt.figaspect(0.35))
     
     ax = fig.add_subplot(111, projection = '3d')
     X,Y = np.meshgrid(x,y)
     ax.plot_surface(X,Y,dist.reshape(N+1,N+1) ,cmap='hot')
-    plt.title("Solution au temps t = 0")
     plt.xlabel("x")
     plt.ylabel("y")
 
-    return dist
-
-    print(np.max(dist))
-    
     plt.show()
 
+    return dist
+
+    
+    
 def matrix_lap(N):
     """Retourne une matrice qui discrétise le laplacien de u dans le domaine Omega = [xmin,xmax,ymin,ymax], découpé en N intervalles en x et y. La matrice finale est une matrice scipy.sparse CSR matrix. Cette matrice est de taille (N+1)*(N+1)"""
 
