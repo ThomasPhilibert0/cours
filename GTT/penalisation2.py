@@ -53,7 +53,7 @@ def func_ex(x,y):
     return 0.25*((x-0.5)**2 + (y-0.5)**2)
 
 def f(x,y):
-    return 0.25*((x-0.5)**2 + (y-0.5)**2)
+    return (x-0.5)**2 + (y-0.5)**2
 
 def Xhi(f,R):
     """R est le rayon du masque"""
@@ -71,7 +71,7 @@ def masque(f,R,N):
     taille = (N+1)*(N+1)
     
     diags = np.zeros((1,taille))
-
+    
     #Diagonale principale
     for i in range(N+1):
         for j in range(N+1):
@@ -87,32 +87,33 @@ def masque(f,R,N):
     
     return M
 
+def erreur_abs(A,E,N):
+    return np.max(np.abs(E - A))
+
 def penalisation(f,R,N,eta):
 
     taille = (N+1)*(N+1)
     x = np.linspace(0,1,N+1)
-    y = np.linspace(0,1,N+1)
-    
+    y = np.linspace(0,1,N+1)    
+
     A = matrix_lap(N)
     B = masque(f,R,N)
 
-    DISC = (A - (1/eta)* B)
+    DISC = (A - (1/eta)*B)
         
     F = np.zeros(taille)
     E = np.zeros(taille)
     
-    for i in range(N+1):
-        for j in range(N+1):
+    for i in range(1,N):
+        for j in range(1,N):
             k = i + j*(N+1)
-            F[k] = f(x[i],y[j])
             E[k] = func_ex(x[i],y[j])
-            
-        
-            
-            
 
-    U = np.zeros(taille)
-
+    for i in range (1,N):
+        for j in range(1,N):
+            k = i + j*(N+1)
+            F[k] = -Xhi(f(x[i],y[j]),R)*func_ex(x[i],y[j])/eta + 1
+            
     U = sci.spsolve(DISC,F)
 
     fig = plt.figure(figsize = plt.figaspect(0.35))
@@ -129,5 +130,37 @@ def penalisation(f,R,N,eta):
     plt.ylabel("y")
 
     plt.show()
+
+    tab_err = np.zeros(N)
+
+    for i in range(1,N):
+        tab_err[i] = erreur_abs(U,E,i)
+
+        plt.plot(i,tab_err[i],color='blue',marker='o')
+        plt.xscale("log")
+        plt.yscale("log")
+
+        plt.xlabel('N')
+        plt.ylabel('Erreur log Abs')
+
+    plt.show()
  
     return U
+
+def affichage(N,f,R):
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    E = np.zeros((N+1,N+1))
+
+    for i in range (N+1):
+        for j in range(N+1):
+            E[i][j] =  Xhi(f(x[i],y[j]),R)
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(1,2,1,)
+    X,Y = np.meshgrid(x,y)
+    ax.pcolormesh(X,Y,E ,cmap='hot')
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.show()
