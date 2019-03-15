@@ -1,0 +1,54 @@
+fs = 44100;                                     %frequence d'echantillonnage
+T = 1/fs;                                       %periode d'echantillonnage
+n = [0:T:2];                                    %echantillonnage intervalle 0-2s
+f1 = 50; f2 = 15000;                            %frequence des sons z1, z2
+omega1 = 2*pi*f1; omega2 = 2*pi*f2;             %frequence angulaire en radians
+z1 = 5*cos(omega1*n); z2 = 3*sin(omega2*n);     %ondes sonores
+sound(z1,fs);                                   %joue le son z1
+sound(z2,fs);                                   %joue le son z2 (pense a zoomer)
+sound(z1+z2,fs);                                %joue le son z1+z2
+plot(n,z1);                                     %faire le plot de z1
+xlabel('Temps (seconde)');                      
+ylabel('z1');                                   
+title('Signal audio 1');
+figure(2);
+plot(n,z2);
+xlabel('Temps (seconde)');
+ylabel('z2');
+title('Signal audio 2');
+figure(3);
+stem(abs(fft(z1))); 
+xlabel('Fréquence (Hz)');
+ylabel('ẑ1');
+title('Spectre audio 1');
+figure(4);
+stem(abs(fft(z2))); 
+xlabel('Fréquence (Hz)');
+ylabel('ẑ2');
+title('Spectre audio 2');
+z3 = z1+z2;
+figure(5);
+stem(abs(fft(z3))); 
+xlabel('Fréquence (Hz)');
+ylabel('ẑ1+ẑ2');
+title('Spectre audio 1 + 2');
+figure(6);
+stem(abs(fftshift(fft(z1)))); 
+xlabel('Fréquence (Hz)');
+ylabel('ẑ1');
+title('Spectre audio centré 1');
+figure(7);
+stem(abs(fftshift(fft(z2)))); 
+xlabel('Fréquence (Hz)');
+ylabel('ẑ2');
+title('Spectre audio centré 2');
+figure(8);
+stem(abs(fftshift(fft(z3)))); 
+xlabel('Fréquence (Hz)');
+ylabel('ẑ1+ẑ2');
+title('Spectre audio centré 1 + 2');
+figure(9);
+stem(abs(fft(z1.*((-1).^n))); 
+xlabel('Fréquence (Hz)');
+ylabel('ẑ1');
+title('Spectre audio centré par (-1)^n 1');
