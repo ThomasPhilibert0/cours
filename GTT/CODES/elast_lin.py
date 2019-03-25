@@ -309,13 +309,18 @@ def erreur_abs(A,E,N):
 def erreur_eucl(A,E,N):
     return np.sqrt(np.sum((E-A)**2)/((N+1)**2))
 
+def aff(x,b,a):
+    return b*x**(a)
+
 def graphe_erreur(N,mu,lamb,force,f_ex):
     tab_err1 = np.zeros(N)
     tab_err2 = np.zeros(N)
+    ERR1 = np.zeros(N)
+    ERR2 = np.zeros(N)
     x = np.linspace(1,N,N)
 
     
-    for i in range(1,N):  
+    for i in range(1,N+1):  
         taille = (N+1)*(N+1)
         U = resolution(N,mu,lamb,force)
         E = solution_exacte(N,mu,lamb,f_ex)
@@ -326,28 +331,38 @@ def graphe_erreur(N,mu,lamb,force,f_ex):
         U1 = U[0:taille]
         U2 = U[taille : 2*taille]
         
-        tab_err1[i] = erreur_eucl(E1,U1,i)
-        tab_err2[i] = erreur_eucl(E2,U2,i)
+        tab_err1[i-1] = erreur_eucl(E1,U1,i)
+        tab_err2[i-1] = erreur_eucl(E2,U2,i)
+        
+        
+        
+    for i in range (1,N+1):
+        ERR1[i-1] = aff(i,tab_err1[0],(np.log(tab_err1[N-1])-np.log(tab_err1[0]))/(np.log(N-1))) 
+        ERR2[i-1] = aff(i,tab_err2[0],(np.log(tab_err2[N-1])-np.log(tab_err2[0]))/(np.log(N-1))) 
+        
         
         
         
     plt.figure(figsize = plt.figaspect(0.35))
     plt.subplot(1,2,1)
     plt.plot(x,tab_err1,color='blue',marker='o', linestyle='none')
+    plt.plot(x,ERR1,color='r', linestyle='-', label=f"y = {round((np.log(tab_err1[N-1])-np.log(tab_err1[0]))/(np.log(N-1)),5)}x+{round(tab_err1[0],5)}")
     plt.xscale('log')
     plt.yscale('log')
     plt.xlabel('N')
     plt.ylabel('Erreur log Abs')
     plt.title(f'Erreur de U1')
+    plt.legend()
         
     plt.subplot(1,2,2)
     plt.plot(x,tab_err2,color='blue',marker='o', linestyle='none')
+    plt.plot(x,ERR2,color='r', linestyle='-',label=f"y = {round((np.log(tab_err2[N-1])-np.log(tab_err2[0]))/(np.log(N-1)),5)}x+{round(tab_err2[0],5)}")
     plt.xscale('log')
     plt.yscale('log')
     plt.xlabel('N')
     plt.ylabel('Erreur log Abs')
-    plt.title(f'Erreur de U2')
-        
+    plt.title(f'Erreur de U2')    
+    plt.legend()
     
     plt.show()
     
