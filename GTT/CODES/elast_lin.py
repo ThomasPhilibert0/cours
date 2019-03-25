@@ -306,6 +306,9 @@ def snd_mbr(x,y,delta):
 def erreur_abs(A,E,N):
     return np.max(np.abs(E - A))
 
+def erreur_eucl(A,E,N):
+    return np.sqrt(np.sum((E-A)**2)/((N+1)**2))
+
 def graphe_erreur(N,mu,lamb,force,f_ex):
     tab_err1 = np.zeros(N)
     tab_err2 = np.zeros(N)
@@ -323,8 +326,8 @@ def graphe_erreur(N,mu,lamb,force,f_ex):
         U1 = U[0:taille]
         U2 = U[taille : 2*taille]
         
-        tab_err1[i] = erreur_abs(E1,U1,i)
-        tab_err2[i] = erreur_abs(E2,U2,i)
+        tab_err1[i] = erreur_eucl(E1,U1,i)
+        tab_err2[i] = erreur_eucl(E2,U2,i)
         
         
         
