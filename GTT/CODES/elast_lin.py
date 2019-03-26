@@ -115,7 +115,7 @@ def matrix_croi_FAUX(N):
     A = sparse.spdiags(diags,[-(N+1),-1,0,1,(N+1)],taille,taille, format = "csr")
 
     return A
--
+
 def der_sec1(N):
     """Retourne une matrice sparse de taille (N+1)*(N+1) correspondant à la discrétisation de la dérivée seconde par rapport à la premiere variable  sur l'intégralité du maillage"""
 
@@ -194,7 +194,7 @@ def matrix_elas(N,mu,lamb):
 
     return MATRIX
 
-def resolution(N,mu,lamb,force,f_ex):
+def resolution(N,mu,lamb,force):
     
 
     #Créer des fonctions f1 et f2 pour la résolution
@@ -208,13 +208,6 @@ def resolution(N,mu,lamb,force,f_ex):
     delta = (lamb + mu)/mu
     
     F = np.zeros(2*taille)
-    E = np.zeros(2*taille)
-
-    for i in range (N+1):
-        for j in range (N+1):
-            k = i + j*(N+1)
-            E[k] = f_ex(x[i],y[j])[0]
-            E[k + taille] = f_ex(x[i],y[j])[1]
 
     for i in range(1,N):
         for j in range(1,N):
@@ -225,12 +218,43 @@ def resolution(N,mu,lamb,force,f_ex):
     MAT = matrix_elas(N,mu,lamb)
 
     U = sci.spsolve(MAT,F)
+    
+    return U
+
+def solution_exacte(N,mu,lamb,f_ex):
+    
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    taille = (N+1)*(N+1)
+
+    delta = (lamb + mu)/mu
+    E = np.zeros(2*taille)
+    
+    for i in range (N+1):
+        for j in range (N+1):
+            k = i + j*(N+1)
+            E[k] = f_ex(x[i],y[j])[0]
+            E[k + taille] = f_ex(x[i],y[j])[1]
+            
+    return E    
+    
+def graphe_reso(N,mu,lamb,force,f_ex):
+    
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    taille = (N+1)*(N+1)
+    
+    U = resolution(N,mu,lamb,force)
+    E = solution_exacte(N,mu,lamb,f_ex)
 
     u1 = E[0:taille]
     u2 = E[taille : 2*taille]
     
     U1 = U[0:taille]
     U2 = U[taille : 2*taille]
+    
+    
     
     fig = plt.figure(figsize = plt.figaspect(0.7))
     
@@ -278,3 +302,67 @@ def snd_mbr(x,y,delta):
     F2 = 2*(-1+y)**3*y + 6*(-1+x)*x*(1-3*y+2*y**2) + delta*(-1+x)*(y**2*(-3+4*y)+4*x**2*y**2*(-3+4*y)+x*(6-18*y+27*y**2-20*y**3))
     
     return [F1, F2]
+
+def erreur_abs(A,E,N):
+    return np.max(np.abs(E - A))
+
+def erreur_eucl(A,E,N):
+    return np.sqrt(np.sum((E-A)**2)/((N+1)**2))
+
+def aff(x,b,a):
+    return b*x**(a)
+
+def graphe_erreur(N,mu,lamb,force,f_ex):
+    tab_err1 = np.zeros(N)
+    tab_err2 = np.zeros(N)
+    ERR1 = np.zeros(N)
+    ERR2 = np.zeros(N)
+    x = np.linspace(1,N,N)
+
+    
+    for i in range(1,N+1):  
+        taille = (N+1)*(N+1)
+        U = resolution(N,mu,lamb,force)
+        E = solution_exacte(N,mu,lamb,f_ex)
+        
+        E1 = E[0:taille]
+        E2 = E[taille : 2*taille]
+    
+        U1 = U[0:taille]
+        U2 = U[taille : 2*taille]
+        
+        tab_err1[i-1] = erreur_eucl(E1,U1,i)
+        tab_err2[i-1] = erreur_eucl(E2,U2,i)
+        
+        
+        
+    for i in range (1,N+1):
+        ERR1[i-1] = aff(i,tab_err1[0],(np.log(tab_err1[N-1])-np.log(tab_err1[0]))/(np.log(N-1))) 
+        ERR2[i-1] = aff(i,tab_err2[0],(np.log(tab_err2[N-1])-np.log(tab_err2[0]))/(np.log(N-1))) 
+        
+        
+        
+        
+    plt.figure(figsize = plt.figaspect(0.35))
+    plt.subplot(1,2,1)
+    plt.plot(x,tab_err1,color='blue',marker='o', linestyle='none')
+    plt.plot(x,ERR1,color='r', linestyle='-', label=f"y = {round((np.log(tab_err1[N-1])-np.log(tab_err1[0]))/(np.log(N-1)),5)}x+{round(tab_err1[0],5)}")
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlabel('N')
+    plt.ylabel('Erreur log Abs')
+    plt.title(f'Erreur de U1')
+    plt.legend()
+        
+    plt.subplot(1,2,2)
+    plt.plot(x,tab_err2,color='blue',marker='o', linestyle='none')
+    plt.plot(x,ERR2,color='r', linestyle='-',label=f"y = {round((np.log(tab_err2[N-1])-np.log(tab_err2[0]))/(np.log(N-1)),5)}x+{round(tab_err2[0],5)}")
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlabel('N')
+    plt.ylabel('Erreur log Abs')
+    plt.title(f'Erreur de U2')    
+    plt.legend()
+    
+    plt.show()
+    
