@@ -100,6 +100,45 @@ def domaine(N):
     
     return MAT
 
+def chaleurdist(MAT,N,dt,t):
 
+     x = np.linspace(0,1,N+1)
+     y = np.linspace(0,1,N+1)
+
+     taille = (N+1)*(N+1)
+
+     T = np.zeros((t+1,taille))          #Initialisation de la solution finale
+
+     for i in range(N):
+         for j in range(N):
+             k = i + j*(N+1)
+             T[:,k] = MAT[i][j]
+
+     for i in range(t):
+         T[i+1,:] = sci.spsolve(matrix_lap(N,dt), T[i,:])
+         
+     return T
+
+def dist(MAT,N,dt):
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    T = chaleurdist(MAT,N,dt,1)
+
+    dist  = -np.log(T[1,:])*np.sqrt(dt)
+    dist[~np.isfinite(dist)] = 0 
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
     
+    ax = fig.add_subplot(111,projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,dist.reshape(N+1,N+1), cmap = 'hot')
+    
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
+
+    return dist
 
