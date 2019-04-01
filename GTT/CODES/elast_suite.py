@@ -49,13 +49,21 @@ def matrix_lap(N,dt):
     A = sparse.spdiags(diags,[-(N+1),-1,0,1,(N+1)],taille,taille, format = "csr")
 
     return A
-    
+
+def f_gauche(x,y,N):
+    return (x-int(N/4))**2 + (y - int(N/4))**2
+
+def f_droite(x,y,N):
+    return (x-int(N/4))**2 + (y - int(3*N/4))**2
+
 def domaine(N):
     taille = (N+1)*(N+1)
 
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
     y_haut = int(2*N/3)
     y_bas = int(3*N/4)
-    
     borne_gauche = int(N/4)
     borne_gaubouche = int(N/3)
     borne_droibouche = int(2*N/3)
@@ -63,6 +71,7 @@ def domaine(N):
     
     MAT = np.zeros((N+1,N+1))
 
+    #Construction Bouche
     for i in range(y_haut,y_bas) :
         for j in range (borne_gaubouche, borne_gauche , -1):
             if i == (N - j) :
@@ -75,7 +84,20 @@ def domaine(N):
     for i in range (y_haut,y_bas):
         MAT[i][i] = 1
 
+    #Construction des yeux
 
+    #Oeil gauche
+    for i in range (N+1):
+        for j in range (N+1):
+            if f_gauche(i,j,N) <= int(N/12)**2 :
+                MAT[i][j] = 1
+
+    #Oeil droit
+    for i in range(N+1):
+        for j in range(N+1):
+            if f_droite(i,j,N) <= int(N/12)**2:
+                MAT[i][j] = 1
+    
     return MAT
 
 
