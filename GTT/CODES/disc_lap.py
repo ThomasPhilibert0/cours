@@ -113,29 +113,49 @@ def affichage(N):
     print("Temps d execution : %s secondes -" %(time.time() - start_time))
 
 def erreur_eucl(A,E,N):
-    return np.sqrt(np.sum((E-A)**2)/((N+1)**2))
+    return np.sqrt(np.sum(((E-A)**2))/(N+1)**2)
 
 def erreur_abs(A,E,N):
     return np.max(np.abs(E - A))
 
+def aff(x,b,a):
+    return np.exp(b)*x**(a)
+
 def graphe_erreur(N):
-    tab_err = np.zeros(N)
+    tab_err1 = np.zeros(N)
     tab_err2 = np.zeros(N)
+    ERR1 = np.zeros(N)
+    ERR2 = np.zeros(N)
+    x = np.linspace(1,N,N)
 
-    for i in range(1,N):        
-        U = sol_disc(i+1)
-        V = sol_exacte(i+1)
+    for i in range(1,N+1):        
+        U = sol_disc(i)
+        V = sol_exacte(i)
 
-        tab_err[i] = erreur_eucl(U,V,i)
-        tab_err2[i] = erreur_abs(U,V,i)
+        tab_err1[i-1] = erreur_eucl(U,V,i)
+        tab_err2[i-1] = erreur_abs(U,V,i)
 
-        plt.plot(i,tab_err[i],color='blue',marker='o')
-        plt.plot(i,tab_err2[i],color='green',marker='+')
-        plt.xscale("log")
-        plt.yscale("log")
-        plt.xlabel('N')
-        plt.ylabel('Erreur log: Eucl (bleu), Abs (vert)')
+
+    x1 = x[N-10:N]
+    Err1 = tab_err1[N-10:N]
+    Err2 = tab_err2[N-10:N]
+    z1 = np.polyfit(np.log(x1),np.log(Err1),1)
+    z2 = np.polyfit(np.log(x1),np.log(Err2),1)
+        
+    y1 = aff(x,z1[1],z1[0])  
+    y2 = aff(x,z2[1],z2[0])
+
+    
+    plt.plot(x,tab_err1,color='blue',marker='o', linestyle='none')
+    plt.plot(x,tab_err2,color='green',marker='+', linestyle='none')
+    plt.plot(x,y1,color='r', linestyle='-')
+    plt.plot(x,y2,color='r', linestyle='-')
+    plt.xscale("log")
+    plt.yscale("log")
+    plt.xlabel('N')
+    plt.ylabel('Erreur log: Eucl (bleu), Abs (vert)')
 
     plt.show()
-        
+
+    return z1[0],z2[0]
 
