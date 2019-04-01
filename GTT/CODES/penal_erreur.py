@@ -52,7 +52,7 @@ def func_ex(x,y):
     return 0.25*((x-0.5)**2 + (y-0.5)**2)
 
 def f(x,y):
-    return ((x-0.5)**2 + (y-0.5)**2)
+    return (x-0.5)**2 + (y-0.5)**2
 
 def Xhi(f,R):
     """R est le rayon du masque"""
@@ -77,10 +77,10 @@ def masque(f,R,N):
             k = i + j*(N+1)
             diags[0,k] = Xhi(f(x[i],y[j]),R)
 
-    diags[0,0:N+2] = 0
-    diags[0,taille-(N+2):taille] = 0
-    diags[0, np.arange(2*N+1, taille, N+1)] = 0
-    diags[0, np.arange(2*N+2, taille, N+1)] = 0
+    diags[0,0:N+2] = 1
+    diags[0,taille-(N+2):taille] = 1
+    diags[0, np.arange(2*N+1, taille, N+1)] = 1
+    diags[0, np.arange(2*N+2, taille, N+1)] = 1
 
     M = sparse.spdiags(diags,0,taille,taille,format = 'csr')
     
@@ -90,14 +90,14 @@ def erreur_abs(A,E,N):
     return np.max(np.abs(E - A))
 
 def erreur_eucl(A,E,N):
-    return np.sqrt(np.sum((E-A)**2))/((N+1)**2)
+    return np.sqrt(np.sum(((E-A)**2))/(N+1)**2)
 
 def sol_ex(N):
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
     E = np.zeros((N+1)*(N+1))
-    for i in range(1,N):
-        for j in range(1,N):
+    for i in range(0,N+1):
+        for j in range(0,N+1):
             k = i + j*(N+1)
             E[k] = func_ex(x[i],y[j])
     return E
@@ -109,13 +109,12 @@ def sol_penal(f,R,N,eta):
 
     A = matrix_lap(N)
     B = masque(f,R,N)
-
     DISC = (A - (1/eta)*B)
         
     F = np.zeros(taille)
     
-    for i in range (1,N):
-        for j in range(1,N):
+    for i in range (0,N+1):
+        for j in range(0,N+1):
             k = i + j*(N+1)
             F[k] = -Xhi(f(x[i],y[j]),R)*func_ex(x[i],y[j])/eta + 1
             
@@ -149,29 +148,44 @@ def graphe(f,R,N,eta):
 def aff(x,b,a):
     return np.exp(b)*x**(a)
 
-def graphe_erreur(N,R,eta):
+def graphe_erreur(N,eta):
     tab_err = np.zeros(N)
+    tab_err2 = np.zeros(N)
     ERR1 = np.zeros(N)
+    ERR2 = np.zeros(N)
     x = np.linspace(1,N,N)
+    p = np.zeros((2,20))
 
-    for i in range(1,N):        
-        V = sol_penal(f, R, i+1, eta)
-        U = sol_ex(i+1)
+    for a in range(1,20):
+        R = a*0.05
+        for i in range(1,N):        
+            V = sol_penal(f, R, i+1, eta)
+            U = sol_ex(i+1)
         
-        tab_err[i] = erreur_eucl(V,U,i)
+            tab_err[i] = erreur_abs(V,U,i)
+            tab_err2[i] = erreur_eucl(V,U,i)
 
-    x1 = x[N-10:N]
-    Err1 = tab_err[N-10:N]
-    z1 = np.polyfit(np.log(x1),np.log(Err1),1)
-    y1 = aff(x,z1[1],z1[0])
-
-    plt.plot(x,tab_err,color='blue',marker='o', linestyle='none')
-    plt.plot(x,y1,color='r', linestyle='-')
-    plt.xscale("log")
-    plt.yscale("log")
-    plt.xlabel('N')
-    plt.ylabel('Erreur log Abs')
-    plt.title('Pour R={R} et eta={eta}')
+            x1 = x[N-10:N]
+            Err1 = tab_err[N-10:N]
+            Err2 = tab_err2[N-10:N]
+            z1 = np.polyfit(np.log(x1),np.log(Err1),1)
+            z2 = np.polyfit(np.log(x1),np.log(Err2),1)
+            y1 = aff(x,z1[1],z1[0])
+            y2 = aff(x,z2[1],z2[0])
+            p[0,a] = z1[0]
+            p[1,a] = z2[0]
+            
+        plt.figure(a)
+        plt.plot(x,tab_err,color='blue',marker='o', linestyle='none')
+        plt.plot(x,y1,color='r', linestyle='-')
+        plt.plot(x,tab_err2,color='green',marker='o', linestyle='none')
+        plt.plot(x,y2,color='y', linestyle='-')
+        plt.xscale("log")
+        plt.yscale("log")
+        plt.xlabel('N')
+        plt.ylabel('Erreur log Abs')
+        plt.title('Pour R={R} et eta={eta}')
 
     plt.show()
-    return z1[0],
+    return p
+    
