@@ -52,7 +52,7 @@ def func_ex(x,y):
     return 0.25*((x-0.5)**2 + (y-0.5)**2)
 
 def f(x,y):
-    return (x-0.5)**2 + (y-0.5)**2
+    return ((x-0.5)**2 + (y-0.5)**2)
 
 def Xhi(f,R):
     """R est le rayon du masque"""
@@ -89,6 +89,9 @@ def masque(f,R,N):
 def erreur_abs(A,E,N):
     return np.max(np.abs(E - A))
 
+def erreur_eucl(A,E,N):
+    return np.sqrt(np.sum((E-A)**2))/((N+1)**2)
+
 def sol_ex(N):
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
@@ -120,20 +123,55 @@ def sol_penal(f,R,N,eta):
     
     return U
 
+def graphe(f,R,N,eta):
+    taille = (N+1)*(N+1)
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    
+    A = sol_penal(f,R,N,eta)
+    B = sol_ex(N)
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(1,2,1, projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,A.reshape(N+1,N+1) ,cmap='hot')
+    plt.xlabel("x")
+    plt.ylabel("y")
+    
+    ax = fig.add_subplot(1,2,2, projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,B.reshape(N+1,N+1),cmap='hot')
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
+
+def aff(x,b,a):
+    return np.exp(b)*x**(a)
+
 def graphe_erreur(N,R,eta):
     tab_err = np.zeros(N)
+    ERR1 = np.zeros(N)
+    x = np.linspace(1,N,N)
 
     for i in range(1,N):        
         V = sol_penal(f, R, i+1, eta)
         U = sol_ex(i+1)
         
-        tab_err[i] = erreur_abs(V,U,i)
+        tab_err[i] = erreur_eucl(V,U,i)
 
-        plt.plot(i,tab_err[i],color='blue',marker='o')
-        plt.xscale("log")
-        plt.yscale("log")
-        plt.xlabel('N')
-        plt.ylabel('Erreur log Abs')
-        plt.title(f'Pour R={R} et eta={eta}')
+    x1 = x[N-10:N]
+    Err1 = tab_err[N-10:N]
+    z1 = np.polyfit(np.log(x1),np.log(Err1),1)
+    y1 = aff(x,z1[1],z1[0])
+
+    plt.plot(x,tab_err,color='blue',marker='o', linestyle='none')
+    plt.plot(x,y1,color='r', linestyle='-')
+    plt.xscale("log")
+    plt.yscale("log")
+    plt.xlabel('N')
+    plt.ylabel('Erreur log Abs')
+    plt.title('Pour R={R} et eta={eta}')
 
     plt.show()
+    return z1[0],
