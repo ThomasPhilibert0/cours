@@ -49,46 +49,35 @@ def matrix_lap(N,dt):
     A = sparse.spdiags(diags,[-(N+1),-1,0,1,(N+1)],taille,taille, format = "csr")
 
     return A
-
-def f(x,y):
-    return y - 0.5*(x**2)
-
-def gamma(f):
-    """Fonction qui indique si on est sur la courbe gamma d'équation f"""
-    if f == 0:
-        return 1
-    else:
-        return 0
     
-def domaine(f,N):
-    """Fonction qui discretise le domaine carré avec gamma dedans (ca vaut 0 partout dans le carré et 1 sur la courbe gamma"""
-    x = np.linspace(0,1,N+1)
-    y = np.linspace(0,1,N+1)
-
+def domaine(N):
     taille = (N+1)*(N+1)
 
-    diags = np.zeros((1,taille))
-
-    for i in range(N-2,N+1):
-        for j in range(N-2,N+1):
-            k = i + j*(N+1)
-            diags[0,k] = gamma(f(x[i],y[j]))
-
-    D = sparse.spdiags(diags,0,taille,taille,format = 'csr')
-    return D
-
+    y_haut = int(2*N/3)
+    y_bas = int(3*N/4)
     
-def dist_gamma(f,N):
-    """Retourne la fonction distance de Gamma avec T=0 sur le bord de domaine"""
-
-    x = np.linspace(0,1,N+1)
-    y = np.linspace(0,1,N+1)
-
-    taille = (N+1)*(N+1)
-
-    T = np.zeros((2,taille))
-
+    borne_gauche = int(N/4)
+    borne_gaubouche = int(N/3)
+    borne_droibouche = int(2*N/3)
+    borne_droite = int(3*N/4)
     
-    
+    MAT = np.zeros((N+1,N+1))
+
+    for i in range(y_haut,y_bas) :
+        for j in range (borne_gaubouche, borne_gauche , -1):
+            if i == (N - j) :
+                MAT[i][j-1] = 1
+
+    for i in range (borne_gaubouche,borne_droibouche):
+        MAT[y_haut][i] = 1
+
+
+    for i in range (y_haut,y_bas):
+        MAT[i][i] = 1
+
+
+    return MAT
+
+
     
 
