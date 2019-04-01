@@ -83,20 +83,6 @@ def domaine(N):
 
     for i in range (y_haut,y_bas):
         MAT[i][i] = 1
-
-    #Construction des yeux
-
-    #Oeil gauche
-    for i in range (N+1):
-        for j in range (N+1):
-            if f_gauche(i,j,N) <= int(N/12)**2 :
-                MAT[i][j] = 1
-
-    #Oeil droit
-    for i in range(N+1):
-        for j in range(N+1):
-            if f_droite(i,j,N) <= int(N/12)**2:
-                MAT[i][j] = 1
     
     return MAT
 
@@ -142,3 +128,66 @@ def dist(MAT,N,dt):
 
     return dist
 
+def BRYAN(N):
+    taille = (N+1)*(N+1)
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    y_haut = int(2*N/3)
+    y_bas = int(3*N/4)
+    borne_gauche = int(N/4)
+    borne_gaubouche = int(N/3)
+    borne_droibouche = int(2*N/3)
+    borne_droite = int(3*N/4)
+    
+    MAT = np.zeros((N+1,N+1))
+
+    #Construction Bouche
+
+    for i in np.arange(int(N/4),int(3*N/4)):
+        MAT[int(N/2)][i] = 1.
+
+    #Construction des yeux
+
+    #Oeil gauche
+    for i in range (N+1):
+        for j in range (N+1):
+            if f_gauche(i,j,N) <= int(N/12)**2 :
+                MAT[i][j] = 1
+
+    #Oeil droit
+    for i in range(N+1):
+        for j in range(N+1):
+            if f_droite(i,j,N) <= int(N/12)**2:
+                MAT[i][j] = 1
+    
+    return MAT
+
+def Xhi(MAT):
+    taille_x = np.shape(MAT)[0]
+    taille_y = np.shape(MAT)[1]
+
+    for i in range(taille_x):
+        for j in range(taille_y):
+            if MAT[i][j] == 1:
+                return 1
+            else :
+                return 0
+
+def second_membre(DIST):
+    taille_x = np.shape(DIST)[0]
+    taille_y = np.shape(DIST)[1]
+
+    taille = taille_x*taille_y
+    snd_mbr = Xhi*DIST
+
+    S = np.zeros(taille)
+    
+    for i in range(taille_x):
+        for j in range(taille_y):
+            k = i + j*taille_y
+            S[k] = snd_mbr[i][j]
+
+    return S
+            
