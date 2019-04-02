@@ -83,6 +83,17 @@ def domaine(N):
 
     for i in range (y_haut,y_bas):
         MAT[i][i] = 1
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    
+    ax = fig.add_subplot(111,projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,MAT, cmap = 'magma')
+    
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
     
     return MAT
 
@@ -98,7 +109,7 @@ def chaleurdist(MAT,N,dt,t):
      for i in range(N):
          for j in range(N):
              k = i + j*(N+1)
-             T[:,k] = MAT[i][j]
+             T[:,k] = MAT[j][i]
 
      for i in range(t):
          T[i+1,:] = sci.spsolve(matrix_lap(N,dt), T[i,:])
@@ -119,14 +130,14 @@ def dist(MAT,N,dt):
     
     ax = fig.add_subplot(111,projection = '3d')
     X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,dist.reshape(N+1,N+1), cmap = 'hot')
+    ax.plot_surface(X,Y,dist.reshape(N+1,N+1), cmap = 'magma')
     
     plt.xlabel("x")
     plt.ylabel("y")
 
     plt.show()
 
-    return dist
+    return dist.reshape((N+1,N+1))
 
 def BRYAN(N):
     taille = (N+1)*(N+1)
@@ -151,43 +162,291 @@ def BRYAN(N):
     #Construction des yeux
 
     #Oeil gauche
-    for i in range (N+1):
-        for j in range (N+1):
-            if f_gauche(i,j,N) <= int(N/12)**2 :
-                MAT[i][j] = 1
+    #for i in range (N+1):
+     #   for j in range (N+1):
+      #      if f_gauche(i,j,N) <= int(N/12)**2 :
+       #         MAT[i][j] = 1
 
     #Oeil droit
-    for i in range(N+1):
-        for j in range(N+1):
-            if f_droite(i,j,N) <= int(N/12)**2:
-                MAT[i][j] = 1
+    #for i in range(N+1):
+     #   for j in range(N+1):
+      #      if f_droite(i,j,N) <= int(N/12)**2:
+       #         MAT[i][j] = 1
     
     return MAT
 
-def Xhi(MAT):
-    taille_x = np.shape(MAT)[0]
-    taille_y = np.shape(MAT)[1]
 
-    for i in range(taille_x):
-        for j in range(taille_y):
-            if MAT[i][j] == 1:
-                return 1
-            else :
-                return 0
+def second_membre(MAT,DIST,N):
+    taille = (N+1)*(N+1)
+    snd_mbr = MAT*DIST
 
-def second_membre(DIST):
-    taille_x = np.shape(DIST)[0]
-    taille_y = np.shape(DIST)[1]
-
-    taille = taille_x*taille_y
-    snd_mbr = Xhi*DIST
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)    
 
     S = np.zeros(taille)
     
-    for i in range(taille_x):
-        for j in range(taille_y):
-            k = i + j*taille_y
+    for i in range(N+1):
+        for j in range(N+1):
+            k = i + j*(N+1)
             S[k] = snd_mbr[i][j]
 
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    
+    ax = fig.add_subplot(111,projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,snd_mbr, cmap = 'magma')
+    
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
+    
     return S
-            
+
+
+#test elasticité sur domaine de base pour avoir demie lune
+
+def Laplacien(N):
+    """Retourne une matrice sparse de taille (N+1)*(N+1) correspondant à la discrétisation du Laplacien sur l'intégralité du maillage"""
+    
+    h = 1./N
+    h2 = h*h
+    taille = (N+1)*(N+1)
+
+    diags = np.zeros((5,taille))
+
+    #Diagonale principale
+    diags[2,:] = 1.
+    diags[2, N+2:taille - (N+2)] = -4./h2
+    diags[2, np.arange(2*N+1, taille, N+1)] = 1.
+    diags[2, np.arange(2*N+2, taille, N+1)] = 1.
+              
+    #Diagonale "-1"
+    diags[1,N+1:taille-(N+1)] = 1./h2
+    diags[1, np.arange(2*N, taille, N+1)] = 0.
+    diags[1, np.arange(2*N+1, taille, N+1)] = 0.
+    
+    #Diagonale "+1"
+    diags[3, N+3:taille-(N+1)] = 1./h2
+    diags[3, np.arange(2*N+2, taille, N+1)] = 0.
+    diags[3, np.arange(2*N+3, taille, N+1)] = 0.
+
+    #Diagonale "-(N+1)"
+    diags[0, 1 : taille - (2*N+3)] = 1./h2
+    diags[0, np.arange(N,taille,N+1)] = 0.
+    diags[0, np.arange(N+1,taille,N+1)] = 0.
+
+    #Diagonale "+(N+1)"
+    diags[4, taille - N*N + 2 : taille - 1] = 1./h2
+    diags[4, np.arange(taille - N*N + 1 + N ,taille,N+1)] = 0.
+    diags[4, np.arange(taille - N*N + 2 + N ,taille,N+1)] = 0.
+
+    #Construction de la matrice creuse
+    A = sparse.spdiags(diags,[-(N+1),-1,0,1,(N+1)],taille,taille, format = "csr")
+    return A
+
+def matrix_croi(N):
+    """Retourne une matrice sparse de taille (N+1)*(N+1) correspondant 
+    à la discrétisation des dérivées croisées sur l'intégralité du maillage"""
+
+    h = 1./N
+    h2 = h*h
+    taille = (N+1)*(N+1)
+
+    diags = np.zeros((4,taille))
+
+    #Diagonale "-N-2"
+    diags[0, 0 : taille - 2*(N+1)] = 1./(4*h2)
+    diags[0, np.arange(N-1,taille,N+1)] = 0
+    diags[0, np.arange(N,taille,N+1)] = 0
+
+    #Diagonale "-N"
+    diags[1, 2 : taille - (2*N+2)] = -1./(4*h2)
+    diags[1, np.arange(N+1,taille,N+1)] = 0
+    diags[1, np.arange(N+2,taille,N+1)] = 0
+
+    #Diagonale "N"
+    diags[2, 2*(N+1) : taille - 2] = -1./(4*h2)
+    diags[2, np.arange(2*(N+1)+(N-1),taille,N+1)] = 0
+    diags[2, np.arange(2*(N+1)+N,taille,N+1)] = 0
+
+    #Diagonale "N+2"
+    diags[3, 2*(N+2) : taille] = 1./(4*h2)
+    diags[3, np.arange(2*(N+2)+N-1,taille,N+1)] = 0
+    diags[3, np.arange(2*(N+2)+N,taille,N+1)] = 0
+
+    #Construction de la matrice creuse
+    A = sparse.spdiags(diags,[-(N+2),-N,N,(N+2)],taille,taille, format = "csr")
+
+    return A
+
+def matrix_croi(N):
+    """Retourne une matrice sparse de taille (N+1)*(N+1) correspondant 
+    à la discrétisation des dérivées croisées sur l'intégralité du maillage"""
+
+    h = 1./N
+    h2 = h*h
+    taille = (N+1)*(N+1)
+
+    diags = np.zeros((4,taille))
+
+    #Diagonale "-N-2"
+    diags[0, 0 : taille - 2*(N+1)] = 1./(4*h2)
+    diags[0, np.arange(N-1,taille,N+1)] = 0
+    diags[0, np.arange(N,taille,N+1)] = 0
+
+    #Diagonale "-N"
+    diags[1, 2 : taille - (2*N+2)] = -1./(4*h2)
+    diags[1, np.arange(N+1,taille,N+1)] = 0
+    diags[1, np.arange(N+2,taille,N+1)] = 0
+
+    #Diagonale "N"
+    diags[2, 2*(N+1) : taille - 2] = -1./(4*h2)
+    diags[2, np.arange(2*(N+1)+(N-1),taille,N+1)] = 0
+    diags[2, np.arange(2*(N+1)+N,taille,N+1)] = 0
+
+    #Diagonale "N+2"
+    diags[3, 2*(N+2) : taille] = 1./(4*h2)
+    diags[3, np.arange(2*(N+2)+N-1,taille,N+1)] = 0
+    diags[3, np.arange(2*(N+2)+N,taille,N+1)] = 0
+
+    #Construction de la matrice creuse
+    A = sparse.spdiags(diags,[-(N+2),-N,N,(N+2)],taille,taille, format = "csr")
+
+    return A
+
+def der_sec1(N):
+    """Retourne une matrice sparse de taille (N+1)*(N+1) 
+    correspondant à la discrétisation de la dérivée seconde 
+    par rapport à la premiere variable  sur l'intégralité du maillage"""
+    
+    h = 1./N
+    h2 = h*h
+    taille = (N+1)*(N+1)
+
+    diags = np.zeros((3,taille))
+
+    #Diagonale principale
+    diags[1,:] = 0
+    diags[1, N+2:taille - (N+2)] = -2./h2
+    diags[1, np.arange(2*N+1, taille, N+1)] = 0
+    diags[1, np.arange(2*N+2, taille, N+1)] = 0
+              
+    #Diagonale "-1"
+    diags[0,N+1:taille-(N+1)] = 1./h2
+    diags[0, np.arange(2*N, taille, N+1)] = 0.
+    diags[0, np.arange(2*N+1, taille, N+1)] = 0.
+    
+    #Diagonale "+1"
+    diags[2, N+3:taille-(N+1)] = 1./h2
+    diags[2, np.arange(2*N+2, taille, N+1)] = 0.
+    diags[2, np.arange(2*N+3, taille, N+1)] = 0.
+
+    #Construction de la matrice creuse
+    A = sparse.spdiags(diags,[-1,0,1],taille,taille, format = "csr")
+
+    return A
+
+def der_sec2(N):
+    """Retourne une matrice sparse de taille (N+1)*(N+1) 
+    correspondant à la discrétisation de la dérivée seconde 
+    par rapport à la seconde variable  sur l'intégralité du maillage"""
+    
+    h = 1./N
+    h2 = h*h
+    taille = (N+1)*(N+1)
+
+    diags = np.zeros((3,taille))
+
+    #Diagonale principale
+    diags[1,:] = 0.
+    diags[1, N+2:taille - (N+2)] = -2./h2
+    diags[1, np.arange(2*N+1, taille, N+1)] = 0.
+    diags[1, np.arange(2*N+2, taille, N+1)] = 0.
+
+    #Diagonale "-(N+1)"
+    diags[0, 1 : taille - (2*N+3)] = 1./h2
+    diags[0, np.arange(N,taille,N+1)] = 0.
+    diags[0, np.arange(N+1,taille,N+1)] = 0.
+
+    #Diagonale "+(N+1)"
+    diags[2, taille - N*N + 2 : taille - 1] = 1./h2
+    diags[2, np.arange(taille - N*N + 1 + N ,taille,N+1)] = 0.
+    diags[2, np.arange(taille - N*N + 2 + N ,taille,N+1)] = 0.
+
+    #Construction de la matrice creuse
+    A = sparse.spdiags(diags,[-(N+1),0,(N+1)],taille,taille, format = "csr")
+
+    return A
+
+def matrix_elas(N,mu,lamb):
+    """Retourne la matrice sparse globale pour la discrétisation du problème d'élasticité linéaire. Cette matrice sera de taille 2*(N+1)^2. Cette fonction prend en paramètre N le nbr d'intervalle de discrétisation, mu et lamb des scalaires pour l'élasticité linéaire."""
+
+    delta = (lamb + mu)/mu
+
+    LAP = Laplacien(N)
+    CR = matrix_croi(N)
+    DER1 = der_sec1(N)
+    DER2 = der_sec2(N)
+
+    MATRIX = bmat([ [LAP + delta*DER1 , CR],[-CR , LAP + delta*DER2]], format = 'csr')
+
+    return MATRIX
+
+def resolution(N,mu,lamb,S):
+    
+    #Pour une valeur de delta égale = 1 il suffit de prendre lambda = 0
+    
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    taille = (N+1)*(N+1)
+
+    delta = (lamb + mu)/mu
+    
+    F = np.zeros(2*taille)
+
+    for i in range(taille):
+        F[i] = 0
+        F[i+taille] = S[i]
+
+    MAT = matrix_elas(N,mu,lamb)
+
+    U = sci.spsolve(MAT,F)
+    
+    return U
+
+def graphe_reso(N,mu,lamb,S,B):
+    
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    
+    taille = (N+1)*(N+1)
+    
+    U = resolution(N,mu,lamb,S)
+
+    U3 = np.zeros(taille)
+    
+    U1 = U[0:taille]
+    U2 = U[taille : 2*taille]
+    
+    fig = plt.figure(figsize = [16,12])
+    
+    ax = fig.add_subplot(2,2,1,projection='3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y, B, cmap='plasma')
+    plt.title("Solution discrétisée U1")
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    ax = fig.add_subplot(2,2,2,projection='3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y, U3.reshape((N+1,N+1)), cmap='plasma')
+    plt.title("Solution discrétisée")
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+
+    plt.show()
+
+    return U3
