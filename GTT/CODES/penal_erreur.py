@@ -2,6 +2,8 @@ import numpy as np
 import scipy.sparse as sparse   # Algèbre linéaire creuse
 import matplotlib.pyplot as plt # Pour les graphiques
 import scipy.sparse.linalg as sci
+from mpl_toolkits.mplot3d import Axes3D
+import time
 
 def matrix_lap(N):
     """Retourne une matrice qui discrétise le laplacien de u dans le domaine Omega = [xmin,xmax,ymin,ymax], découpé en N intervalles en x et y. La matrice finale est une matrice scipy.sparse CSR matrix. Cette matrice est de taille (N+1)*(N+1)"""
@@ -60,6 +62,7 @@ def Xhi(f,R):
         return 0
     else:
         return 1
+
     
 def masque(f,R,N):
     """Retourne une matrice qui discrétise le masque du domaine grâce à la fonction Xhi précédente, la matrice créée est une matrice sparse de taille (N+1)*(N+1)"""
@@ -90,16 +93,24 @@ def erreur_abs(A,E,N):
     return np.max(np.abs(E - A))
 
 def erreur_eucl(A,E,N):
-    return np.sqrt(np.sum(((E-A)**2))/(N+1)**2)
+    return np.sqrt(np.sum(((E-A)**2)))/(N+1)**2
 
-def sol_ex(N):
+def sol_ex(f,R,N):
+
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
+
     E = np.zeros((N+1)*(N+1))
-    for i in range(0,N+1):
-        for j in range(0,N+1):
+
+    for i in range(N+1):
+        for j in range(N+1):
             k = i + j*(N+1)
-            E[k] = func_ex(x[i],y[j])
+            if f(x[i],y[j]) <= R**2 :
+                E[k] = func_ex(x[i],y[j])
+            else :
+                E[k] = 0.25*R**2
+            
+       
     return E
 
 def sol_penal(f,R,N,eta):
@@ -109,15 +120,17 @@ def sol_penal(f,R,N,eta):
 
     A = matrix_lap(N)
     B = masque(f,R,N)
-    DISC = (A - (1/eta)*B)
+    
+    DISC = (A -(1/eta)*B)
         
     F = np.zeros(taille)
     
-    for i in range (0,N+1):
-        for j in range(0,N+1):
+    for i in range (1,N):
+        for j in range(1,N):
             k = i + j*(N+1)
-            F[k] = -Xhi(f(x[i],y[j]),R)*func_ex(x[i],y[j])/eta + 1
-            
+            F[k] = - 0.25*R**2/eta + 1 
+
+
     U = sci.spsolve(DISC,F)
     
     return U
@@ -128,64 +141,73 @@ def graphe(f,R,N,eta):
     y = np.linspace(0,1,N+1)
     
     A = sol_penal(f,R,N,eta)
-    B = sol_ex(N)
+    B = sol_ex(f,R,N)
 
     fig = plt.figure(figsize = plt.figaspect(0.35))
-    ax = fig.add_subplot(1,2,1, projection = '3d')
+    ax = fig.add_subplot(1,2,1)
+    X,Y = np.meshgrid(x,y)
+    ax.contour(X,Y,A.reshape(N+1,N+1) ,cmap='hot')
+    plt.xlabel("x")
+    plt.ylabel("y")
+    
+    ax = fig.add_subplot(1,2,2)
+    X,Y = np.meshgrid(x,y)
+    ax.contour(X,Y,B.reshape(N+1,N+1),cmap='hot')
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    fig2 = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig2.add_subplot(1,2,1, projection = '3d')
     X,Y = np.meshgrid(x,y)
     ax.plot_surface(X,Y,A.reshape(N+1,N+1) ,cmap='hot')
     plt.xlabel("x")
     plt.ylabel("y")
     
-    ax = fig.add_subplot(1,2,2, projection = '3d')
+    ax = fig2.add_subplot(1,2,2,projection = '3d')
     X,Y = np.meshgrid(x,y)
     ax.plot_surface(X,Y,B.reshape(N+1,N+1),cmap='hot')
     plt.xlabel("x")
     plt.ylabel("y")
-
     plt.show()
 
 def aff(x,b,a):
     return np.exp(b)*x**(a)
-
-def graphe_erreur(N,eta):
+    
+def graphe_erreur(f,R,N,eta):
     tab_err = np.zeros(N)
     tab_err2 = np.zeros(N)
+
     ERR1 = np.zeros(N)
     ERR2 = np.zeros(N)
+
     x = np.linspace(1,N,N)
-    p = np.zeros((2,20))
 
-    for a in range(1,20):
-        R = a*0.05
-        for i in range(1,N):        
-            V = sol_penal(f, R, i+1, eta)
-            U = sol_ex(i+1)
+    for i in range(1,N+1):        
+        V = sol_penal(f, R, i, eta)
+        U = sol_ex(f,R,i)
+
+        tab_err[i-1] = erreur_abs(V,U,i)
+        tab_err2[i-1] = erreur_eucl(V,U,i)
+
+    x1 = x[N-10:N]
+    Err1 = tab_err[N-10:N]
+    Err2 = tab_err2[N-10:N]
+    z1 = np.polyfit(np.log(x1),np.log(Err1),1)
+    z2 = np.polyfit(np.log(x1),np.log(Err2),1)
         
-            tab_err[i] = erreur_abs(V,U,i)
-            tab_err2[i] = erreur_eucl(V,U,i)
+    y1 = aff(x,z1[1],z1[0])  
+    y2 = aff(x,z2[1],z2[0])
 
-            x1 = x[N-10:N]
-            Err1 = tab_err[N-10:N]
-            Err2 = tab_err2[N-10:N]
-            z1 = np.polyfit(np.log(x1),np.log(Err1),1)
-            z2 = np.polyfit(np.log(x1),np.log(Err2),1)
-            y1 = aff(x,z1[1],z1[0])
-            y2 = aff(x,z2[1],z2[0])
-            p[0,a] = z1[0]
-            p[1,a] = z2[0]
-            
-        plt.figure(a)
-        plt.plot(x,tab_err,color='blue',marker='o', linestyle='none')
-        plt.plot(x,y1,color='r', linestyle='-')
-        plt.plot(x,tab_err2,color='green',marker='o', linestyle='none')
-        plt.plot(x,y2,color='y', linestyle='-')
-        plt.xscale("log")
-        plt.yscale("log")
-        plt.xlabel('N')
-        plt.ylabel('Erreur log Abs')
-        plt.title('Pour R={R} et eta={eta}')
+    
+    plt.plot(x,tab_err,color='blue',marker='o', linestyle='none')
+    plt.plot(x,tab_err2,color='green',marker='+', linestyle='none')
+    plt.plot(x,y1,color='r', linestyle='-')
+    plt.plot(x,y2,color='r', linestyle='-')
+    plt.xscale("log")
+    plt.yscale("log")
+    plt.xlabel('N')
+    plt.ylabel('Erreur log: Eucl (bleu), Abs (vert)')
 
     plt.show()
-    return p
-    
+
+    return z1[0],z2[0]
