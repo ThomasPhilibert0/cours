@@ -307,10 +307,10 @@ def erreur_abs(A,E,N):
     return np.max(np.abs(E - A))
 
 def erreur_eucl(A,E,N):
-    return np.sqrt(np.sum((E-A)**2)/((N+1)**2))
+    return np.sqrt(np.sum((E-A)**2))/((N+1)**2)
 
 def aff(x,b,a):
-    return b*x**(a)
+    return np.exp(b)*x**(a)
 
 def graphe_erreur(N,mu,lamb,force,f_ex):
     tab_err1 = np.zeros(N)
@@ -333,12 +333,16 @@ def graphe_erreur(N,mu,lamb,force,f_ex):
         
         tab_err1[i-1] = erreur_eucl(E1,U1,i)
         tab_err2[i-1] = erreur_eucl(E2,U2,i)
+
+    x1 = x[N-10:N]
+    Err1 = tab_err1[N-10:N]
+    Err2 = tab_err2[N-10:N]
+    z1 = np.polyfit(np.log(x1),np.log(Err1),1)
+    z2 = np.polyfit(np.log(x1),np.log(Err2),1)
         
-        
-        
-    for i in range (1,N+1):
-        ERR1[i-1] = aff(i,tab_err1[0],(np.log(tab_err1[N-1])-np.log(tab_err1[0]))/(np.log(N-1))) 
-        ERR2[i-1] = aff(i,tab_err2[0],(np.log(tab_err2[N-1])-np.log(tab_err2[0]))/(np.log(N-1))) 
+    y1 = aff(x,z1[1],z1[0])  
+    y2 = aff(x,z2[1],z2[0])
+
         
         
         
@@ -346,23 +350,24 @@ def graphe_erreur(N,mu,lamb,force,f_ex):
     plt.figure(figsize = plt.figaspect(0.35))
     plt.subplot(1,2,1)
     plt.plot(x,tab_err1,color='blue',marker='o', linestyle='none')
-    plt.plot(x,ERR1,color='r', linestyle='-', label=f"y = {round((np.log(tab_err1[N-1])-np.log(tab_err1[0]))/(np.log(N-1)),5)}x+{round(tab_err1[0],5)}")
+    plt.plot(x,y1,color='r', linestyle='-')
     plt.xscale('log')
     plt.yscale('log')
     plt.xlabel('N')
     plt.ylabel('Erreur log Abs')
-    plt.title(f'Erreur de U1')
+    plt.title('Erreur de U1')
     plt.legend()
         
     plt.subplot(1,2,2)
     plt.plot(x,tab_err2,color='blue',marker='o', linestyle='none')
-    plt.plot(x,ERR2,color='r', linestyle='-',label=f"y = {round((np.log(tab_err2[N-1])-np.log(tab_err2[0]))/(np.log(N-1)),5)}x+{round(tab_err2[0],5)}")
+    plt.plot(x,y2,color='r', linestyle='-')
     plt.xscale('log')
     plt.yscale('log')
     plt.xlabel('N')
     plt.ylabel('Erreur log Abs')
-    plt.title(f'Erreur de U2')    
+    plt.title('Erreur de U2')    
     plt.legend()
     
     plt.show()
     
+    return z1[0],z2[0]
