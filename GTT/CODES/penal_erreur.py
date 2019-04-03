@@ -90,7 +90,7 @@ def masque(f,R,N):
     return M
 
 def erreur_abs(A,E,N):
-    return np.max(np.abs(E - A))
+    return np.max(np.abs(A - E))/(N+1)
 
 def erreur_eucl(A,E,N):
     return np.sqrt(np.sum(((E-A)**2)))/(N+1)**2
@@ -125,10 +125,10 @@ def sol_penal(f,R,N,eta):
         
     F = np.zeros(taille)
     
-    for i in range (1,N):
-        for j in range(1,N):
+    for i in range (N+1):
+        for j in range(N+1):
             k = i + j*(N+1)
-            F[k] = - 0.25*R**2/eta + 1 
+            F[k] = - 0.25*R**2*Xhi(f(x[i],y[j]),R)/eta + 1 
 
 
     U = sci.spsolve(DISC,F)
@@ -149,25 +149,30 @@ def graphe(f,R,N,eta):
     ax.contour(X,Y,A.reshape(N+1,N+1) ,cmap='hot')
     plt.xlabel("x")
     plt.ylabel("y")
+    plt.title('Solution pénalisée')
     
     ax = fig.add_subplot(1,2,2)
     X,Y = np.meshgrid(x,y)
     ax.contour(X,Y,B.reshape(N+1,N+1),cmap='hot')
     plt.xlabel("x")
     plt.ylabel("y")
-
+    plt.title('Solution exacte')
+    
     fig2 = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig2.add_subplot(1,2,1, projection = '3d')
     X,Y = np.meshgrid(x,y)
     ax.plot_surface(X,Y,A.reshape(N+1,N+1) ,cmap='hot')
     plt.xlabel("x")
     plt.ylabel("y")
+    plt.title('Solution pénalisée')
     
     ax = fig2.add_subplot(1,2,2,projection = '3d')
     X,Y = np.meshgrid(x,y)
     ax.plot_surface(X,Y,B.reshape(N+1,N+1),cmap='hot')
     plt.xlabel("x")
     plt.ylabel("y")
+    plt.title('Solution exacte')
+    
     plt.show()
 
 def aff(x,b,a):
@@ -189,9 +194,9 @@ def graphe_erreur(f,R,N,eta):
         tab_err[i-1] = erreur_abs(V,U,i)
         tab_err2[i-1] = erreur_eucl(V,U,i)
 
-    x1 = x[N-10:N]
-    Err1 = tab_err[N-10:N]
-    Err2 = tab_err2[N-10:N]
+    x1 = x[N-50:N]
+    Err1 = tab_err[N-50:N]
+    Err2 = tab_err2[N-50:N]
     z1 = np.polyfit(np.log(x1),np.log(Err1),1)
     z2 = np.polyfit(np.log(x1),np.log(Err2),1)
         
@@ -206,7 +211,7 @@ def graphe_erreur(f,R,N,eta):
     plt.xscale("log")
     plt.yscale("log")
     plt.xlabel('N')
-    plt.ylabel('Erreur log: Eucl (bleu), Abs (vert)')
+    plt.ylabel('Erreur log: Eucl (vert), Abs (bleu)')
 
     plt.show()
 
