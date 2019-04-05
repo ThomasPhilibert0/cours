@@ -4,12 +4,20 @@ n_iter = 1;
 
 e1 = [1;0];
 e2 = [0;1];
+
+X1 = x0(1);
+X2 = x0(2);
+
 x = x0;
 x(1) = x0(1) + Newton_1D(x0, e1, -1, 100, eps);
 x0 = x;
 x(2) = x0(2) + Newton_1D(x0, e2, -1, 100, eps);
 
+
 while norm(x-x0) >= eps && n_iter < n_max
+    X1(n_iter +1) = x(1);
+    X2(n_iter +1) = x(2);
+    
     x0 = x;
     x(1) = x0(1) + Newton_1D(x0, e1, -1, 100, eps);
     x0 = x;
@@ -18,6 +26,7 @@ while norm(x-x0) >= eps && n_iter < n_max
     n_iter = n_iter + 1;
 end
 
+plot(X1,X2,'--or');
 f = banane(x);
 
 fprintf('Le nombre ditération est de %d \n', n_iter)

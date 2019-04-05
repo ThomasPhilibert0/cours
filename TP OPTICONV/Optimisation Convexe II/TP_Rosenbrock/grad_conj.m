@@ -1,5 +1,8 @@
 function out = grad_conj(x0,n_max,eps)
 
+X1(1) = x0(1);
+X2(1) = x0(2);
+
 n_iter = 1;
 
 d0 = JAC(x0);
@@ -12,6 +15,8 @@ else
     x = x0 - d0*r0;
     
     while norm(x-x0) > eps && n_iter < n_max
+        X1(n_iter + 1) = x(1);
+        X2(n_iter + 1) = x(2);
         
         d = JAC(x) + (dot(JAC(x) , JAC(x) - JAC(x0)) / norm(JAC(x0))^2)*d0;
         
@@ -30,6 +35,8 @@ else
         n_iter = n_iter + 1;
     end
 end
+
+plot(X1,X2,'--or')
 
 f = banane(x);
 

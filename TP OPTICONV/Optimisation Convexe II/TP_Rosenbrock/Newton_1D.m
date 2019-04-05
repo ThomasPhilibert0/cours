@@ -1,4 +1,4 @@
-function [t,T] = Newton_1D(x, d, t0, n_max, eps)
+function t = Newton_1D(x, d, t0, n_max, eps)
 
 n_iter = 1;
 
@@ -14,8 +14,6 @@ df2 = d2f_1D(x,d,t0);
 
 %Première itération pour trouver t
 t = t0 - df/df2;
-
-T(1) = t;
 
 %On créé la boucle qui tourne tant que la distance entre t et t0 est sup à
 %eps et que le nombre d'itération est inf à n_max
@@ -34,7 +32,6 @@ while(abs(t - t0) >= eps && n_iter <= n_max)
             t = t0 + df/df2;
         end
     
-    T(n_iter + 1) = t;
     n_iter = n_iter + 1;
     end
     

@@ -15,8 +15,8 @@ end
 
 f = banane(x);
 
-%fprintf('Le nombre ditération est de %d \n', n_iter)
-%fprintf('Le minimum est atteint en x = [%d,%d] et la valeur de la fonction en ce point est de %d',x(1),x(2),f)
+fprintf('Le nombre ditération est de %d \n', n_iter)
+fprintf('Le minimum est atteint en x = [%d,%d] et la valeur de la fonction en ce point est de %d',x(1),x(2),f)
 
     
     
