@@ -88,16 +88,88 @@ def dom_def(N):
     for i in range (y_bas,y_haut):
         MAT[i][i] = 1.
 
-    fig = plt.figure(figsize = plt.figaspect(0.35))
+    #fig = plt.figure(figsize = plt.figaspect(0.35))
     
-    ax = fig.add_subplot(111)
-    X,Y = np.meshgrid(x,y)
-    ax.contour(X,Y,MAT, cmap = 'magma')
+    #ax = fig.add_subplot(111)
+    #X,Y = np.meshgrid(x,y)
+    #ax.contour(X,Y,MAT, cmap = 'magma')
     
-    plt.xlabel("x")
-    plt.ylabel("y")
+    #plt.xlabel("x")
+    #plt.ylabel("y")
 
-    plt.show()
+    #plt.show()
+    
+    return MAT
+
+def dom_init(N):
+
+    ########### PENSER A METTRE UN MULTIPLE DE 12 COMME VALEUR DE N ############
+    
+    taille = (N+1)*(N+1)
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    
+    MAT = np.zeros((N+1,N+1))
+
+    #Construction Bouche
+
+    for i in np.arange(int(N/4),int(3*N/4) +1):
+        MAT[int(N/2)][i] = 1.
+
+    #fig = plt.figure(figsize = plt.figaspect(0.35))
+    
+    #ax = fig.add_subplot(111)
+    #X,Y = np.meshgrid(x,y)
+    #ax.contour(X,Y,MAT, cmap = 'magma')
+    
+    #plt.xlabel("x")
+    #plt.ylabel("y")
+
+    #plt.show()
+    
+    return MAT
+
+def BRYAN(N):
+
+    ########### PENSER A METTRE UN MULTIPLE DE 12 COMME VALEUR DE N ############
+    
+    taille = (N+1)*(N+1)
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    
+    MAT = np.zeros((N+1,N+1))
+
+    #Construction Bouche
+
+    for i in np.arange(int(N/4),int(3*N/4) +1):
+        MAT[int(N/2)][i] = 1.
+
+    #Construction des yeux
+
+    #Oeil gauche
+    for i in range (N+1):
+        for j in range (N+1):
+            if f_gauche(i,j,N) <= int(N/12)**2 :
+                MAT[i][j] = 1.
+
+    #Oeil droit
+    for i in range(N+1):
+        for j in range(N+1):
+            if f_droite(i,j,N) <= int(N/12)**2:
+                MAT[i][j] = 1.
+
+    #fig = plt.figure(figsize = plt.figaspect(0.35))
+    
+    #ax = fig.add_subplot(111)
+    #X,Y = np.meshgrid(x,y)
+    #ax.contour(X,Y,MAT, cmap = 'magma')
+    
+    #plt.xlabel("x")
+    #plt.ylabel("y")
+
+    #plt.show()
     
     return MAT
 
@@ -130,92 +202,19 @@ def dist(MAT,N,dt):
     dist  = -np.log(T[1,:])*np.sqrt(dt)
     dist[~np.isfinite(dist)] = 0 
 
-    fig = plt.figure(figsize = plt.figaspect(0.35))
+    #fig = plt.figure(figsize = plt.figaspect(0.35))
     
-    ax = fig.add_subplot(111,projection = '3d')
-    X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,dist.reshape(N+1,N+1), cmap = 'magma')
+    #ax = fig.add_subplot(111,projection = '3d')
+    #X,Y = np.meshgrid(x,y)
+    #ax.plot_surface(X,Y,dist.reshape(N+1,N+1), cmap = 'magma')
     
-    plt.xlabel("x")
-    plt.ylabel("y")
+    #plt.xlabel("x")
+    #plt.ylabel("y")
 
-    plt.show()
+    #plt.show()
 
     return dist.reshape((N+1,N+1))
 
-def dom_init(N):
-
-    ########### PENSER A METTRE UN MULTIPLE DE 12 COMME VALEUR DE N ############
-    
-    taille = (N+1)*(N+1)
-
-    x = np.linspace(0,1,N+1)
-    y = np.linspace(0,1,N+1)
-    
-    MAT = np.zeros((N+1,N+1))
-
-    #Construction Bouche
-
-    for i in np.arange(int(N/4),int(3*N/4) +1):
-        MAT[int(N/2)][i] = 1.
-
-    #Construction des yeux
-
-    #Oeil gauche
-    for i in range (N+1):
-        for j in range (N+1):
-            if f_gauche(i,j,N) <= int(N/12)**2 :
-                MAT[i][j] = 1.
-
-    #Oeil droit
-    for i in range(N+1):
-        for j in range(N+1):
-            if f_droite(i,j,N) <= int(N/12)**2:
-                MAT[i][j] = 1.
-
-    fig = plt.figure(figsize = plt.figaspect(0.35))
-    
-    ax = fig.add_subplot(111)
-    X,Y = np.meshgrid(x,y)
-    ax.contour(X,Y,MAT, cmap = 'magma')
-    
-    plt.xlabel("x")
-    plt.ylabel("y")
-
-    plt.show()
-    
-    return MAT
-
-
-def second_membre(MAT,DIST,N):
-    taille = (N+1)*(N+1)
-    snd_mbr = MAT*DIST
-
-    x = np.linspace(0,1,N+1)
-    y = np.linspace(0,1,N+1)    
-
-    S = np.zeros(taille)
-    
-    for i in range(N+1):
-        for j in range(N+1):
-            k = i + j*(N+1)
-            S[k] = snd_mbr[i][j]
-
-    fig = plt.figure(figsize = plt.figaspect(0.35))
-    
-    ax = fig.add_subplot(111,projection = '3d')
-    X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,snd_mbr, cmap = 'magma')
-    
-    plt.xlabel("x")
-    plt.ylabel("y")
-
-    plt.show()
-    
-    return S
-
-
-#test elasticité sur domaine de base pour avoir demie lune
 
 def Laplacien(N):
     """Retourne une matrice sparse de taille (N+1)*(N+1) correspondant à la discrétisation du Laplacien sur l'intégralité du maillage"""
@@ -291,38 +290,6 @@ def matrix_croi(N):
 
     return A
 
-def matrix_croi(N):
-    """Retourne une matrice sparse de taille (N+1)*(N+1) correspondant 
-    à la discrétisation des dérivées croisées sur l'intégralité du maillage"""
-
-    h = 1./N
-    h2 = h*h
-    taille = (N+1)*(N+1)
-
-    diags = np.zeros((4,taille))
-
-    #Diagonale "-N-2"
-    diags[0, 0 : taille - 2*(N+1)] = 1./(4*h2)
-    diags[0, np.arange(N-1,taille,N+1)] = 0
-    diags[0, np.arange(N,taille,N+1)] = 0
-
-    #Diagonale "-N"
-    diags[1, 2 : taille - (2*N+2)] = -1./(4*h2)
-    diags[1, np.arange(N+1,taille,N+1)] = 0
-    diags[1, np.arange(N+2,taille,N+1)] = 0
-
-    #Diagonale "N"
-    diags[2, 2*(N+1) : taille - 2] = -1./(4*h2)
-    diags[2, np.arange(2*(N+1)+(N-1),taille,N+1)] = 0
-    diags[2, np.arange(2*(N+1)+N,taille,N+1)] = 0
-
-    #Diagonale "N+2"
-    diags[3, 2*(N+2) : taille] = 1./(4*h2)
-    diags[3, np.arange(2*(N+2)+N-1,taille,N+1)] = 0
-    diags[3, np.arange(2*(N+2)+N,taille,N+1)] = 0
-
-    #Construction de la matrice creuse
-    A = sparse.spdiags(diags,[-(N+2),-N,N,(N+2)],taille,taille, format = "csr")
 
     return A
 
@@ -404,7 +371,27 @@ def matrix_elas(N,mu,lamb):
 
     return MATRIX
 
-def resolution(N,mu,lamb,S):
+def second_membre(N,mu):
+
+    taille = (N+1)*(N+1)
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)    
+
+    DIST = dist(dom_def(N),N,0.00001)
+    
+    F = DIST * dom_init(N)
+
+    S = np.zeros(2*taille)
+    
+    for i in range(N+1):
+        for j in range(N+1):
+            k = i + j*(N+1)
+            S[k+ taille] = F[i][j]/mu
+
+    return S
+
+def resolution(N,mu,lamb):
     
     #Pour une valeur de delta égale = 1 il suffit de prendre lambda = 0
     
@@ -414,45 +401,37 @@ def resolution(N,mu,lamb,S):
     taille = (N+1)*(N+1)
 
     delta = (lamb + mu)/mu
-    
-    F = np.zeros(2*taille)
-
-    for i in range(taille):
-        F[i] = 0
-        F[i+taille] = S[i]
 
     MAT = matrix_elas(N,mu,lamb)
 
-    U = sci.spsolve(MAT,F)
-    
-    return U
+    U = sci.spsolve(MAT,second_membre(N,mu))
 
-def graphe_reso(N,mu,lamb,S,B):
+    U1 = U[0:taille]
+    U2 = U[taille : 2*taille]
+    
+    return [U1,U2]
+
+def graphe_reso(N,mu,lamb):
     
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
     
     taille = (N+1)*(N+1)
     
-    U = resolution(N,mu,lamb,S)
-
-    U3 = np.zeros(taille)
-    
-    U1 = U[0:taille]
-    U2 = U[taille : 2*taille]
-    
+    [U1,U2] = resolution(N,mu,lamb)
+        
     fig = plt.figure(figsize = [16,12])
     
     ax = fig.add_subplot(2,2,1,projection='3d')
     X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y, B, cmap='plasma')
+    ax.plot_surface(X,Y, U1.reshape(N+1,N+1), cmap='plasma')
     plt.title("Solution discrétisée U1")
     plt.xlabel("x")
     plt.ylabel("y")
 
     ax = fig.add_subplot(2,2,2,projection='3d')
     X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y, U3.reshape((N+1,N+1)), cmap='plasma')
+    ax.plot_surface(X,Y, U2.reshape(N+1,N+1), cmap='plasma')
     plt.title("Solution discrétisée")
     plt.xlabel("x")
     plt.ylabel("y")
@@ -460,4 +439,34 @@ def graphe_reso(N,mu,lamb,S,B):
 
     plt.show()
 
-    return U3
+def deformation(N,mu,lamb):
+
+    taille = (N+1)*(N+1)
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    [U1,U2] = resolution(N,mu,lamb)
+
+    U1 = U1.reshape(N+1,N+1)
+    U2 = U2.reshape(N+1,N+1)
+
+    FINAL = np.zeros((N+1,N+1))
+    Bryan = BRYAN(N)
+
+    for i in range(N+1):
+        for j in range(N+1):
+            FINAL[i][j + int(np.ceil(U2[i][j]))] = Bryan[i][j]
+
+            
+    fig = plt.figure(figsize = [16,12])
+    
+    ax = fig.add_subplot(111)
+    X,Y = np.meshgrid(x,y)
+    ax.contour(X,Y, FINAL)
+    plt.title("Solution discrétisée U1")
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
+    
