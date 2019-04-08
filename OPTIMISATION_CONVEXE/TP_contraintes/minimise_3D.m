@@ -1,7 +1,7 @@
-function x = minimise(A,b,tau,r)
+function [x,t] = minimise_3D(A,b,tau,r)
 
 % point d'initialisation
-x0 = [0; 1]; 
+x0 = [4; 4; 8]; 
 
 % L = 2*norm(A'A) = 2 * pgvp A'A
 % alpha = 2*ppvp A'A 
@@ -12,7 +12,7 @@ alpha = 2*valeurs_propres(1,1);
 
 n_iter = 1;
 
-
+t = 2*alpha/L^2 ;
 
 while n_iter <= r
     
@@ -21,10 +21,8 @@ while n_iter <= r
         break
     end
     
-    x = projection(x0 - tau*gradient(A,b,x0));
+    x = projection_3D(x0 - tau*gradient(A,b,x0));
     x0 = x;
     n_iter = n_iter+1;
     
 end
-
-    
