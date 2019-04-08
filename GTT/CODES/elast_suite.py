@@ -380,13 +380,14 @@ def second_membre(N,mu):
 
     DIST = dist(dom_def(N),N,0.00001)
     
-    F = DIST * dom_init(N)
+    F = DIST*BRYAN(N)
 
     S = np.zeros(2*taille)
     
     for i in range(N+1):
         for j in range(N+1):
             k = i + j*(N+1)
+            S[k] = 0
             S[k+ taille] = F[i][j]/mu
 
     return S
@@ -432,7 +433,7 @@ def graphe_reso(N,mu,lamb):
     ax = fig.add_subplot(2,2,2,projection='3d')
     X,Y = np.meshgrid(x,y)
     ax.plot_surface(X,Y, U2.reshape(N+1,N+1), cmap='plasma')
-    plt.title("Solution discrétisée")
+    plt.title("Solution de U2")
     plt.xlabel("x")
     plt.ylabel("y")
 
@@ -451,19 +452,19 @@ def deformation(N,mu,lamb):
     U1 = U1.reshape(N+1,N+1)
     U2 = U2.reshape(N+1,N+1)
 
-    FINAL = np.zeros((N+1,N+1))
     Bryan = BRYAN(N)
-
-    for i in range(N+1):
-        for j in range(N+1):
-            FINAL[i][j + int(np.ceil(U2[i][j]))] = Bryan[i][j]
 
             
     fig = plt.figure(figsize = [16,12])
     
-    ax = fig.add_subplot(111)
+    ax = fig.add_subplot(111, projection = '3d')
+
     X,Y = np.meshgrid(x,y)
-    ax.contour(X,Y, FINAL)
+
+    X = X + U1
+    Y = Y + U2
+    
+    ax.plot_surface(X,Y,Bryan)
     plt.title("Solution discrétisée U1")
     plt.xlabel("x")
     plt.ylabel("y")
