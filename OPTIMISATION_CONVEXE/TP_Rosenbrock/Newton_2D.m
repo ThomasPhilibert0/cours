@@ -4,7 +4,9 @@ X1(1) = x0(1);
 X2(1) = x0(2);
 
 n_iter = 1;
+
 rho = inv(HESS(x0));
+
 x = direction(x0,rho);
 
 while norm(x-x0) >= eps && n_iter < n_max
@@ -18,7 +20,7 @@ while norm(x-x0) >= eps && n_iter < n_max
     n_iter = n_iter + 1;
 
 end
-plot(X1,X2,'--or');
+plot(X1,X2);
 
 f = banane(x);
 

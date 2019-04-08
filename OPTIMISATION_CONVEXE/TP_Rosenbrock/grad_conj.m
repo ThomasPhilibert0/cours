@@ -11,8 +11,8 @@ if d0 == 0
     x = x0;
 
 else
-    r0 = abs(Newton_1D(x0, d0, -1, 100, eps));
-    x = x0 - d0*r0;
+    r0 = Newton_1D(x0, d0, -1, 100, eps);
+    x = x0 + d0*r0;
     
     while norm(x-x0) > eps && n_iter < n_max
         X1(n_iter + 1) = x(1);
@@ -24,19 +24,19 @@ else
             break;
         
         else
-            r0 = abs(Newton_1D(x,d,-1,100,eps));
+            r0 = Newton_1D(x,d,-1,100,eps);
             
             x0 = x;
             d0 = d;
             
-            x = x0 - d0*r0;
+            x = x0 + d0*r0;
         end
         
         n_iter = n_iter + 1;
     end
 end
 
-plot(X1,X2,'--or')
+plot(X1,X2)
 
 f = banane(x);
 

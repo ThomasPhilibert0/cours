@@ -28,13 +28,13 @@ while(abs(t - t0) >= eps && n_iter <= n_max)
         break;
     else
         t = t0 - df/df2;
-        if banane_1D(x,d,t) > banane_1D(x,d,t0)
-            t = t0 + df/df2;
-        end
+        %if banane_1D(x,d,t) > banane_1D(x,d,t0)
+          %  t = t0 + df/df2;
+        %end
     
-    n_iter = n_iter + 1;
+    
     end
-    
+    n_iter = n_iter + 1;
 end
 
 f = banane_1D(x,d,t);
