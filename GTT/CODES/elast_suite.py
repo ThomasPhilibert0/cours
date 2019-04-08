@@ -51,19 +51,22 @@ def matrix_lap(N,dt):
     return A
 
 def f_gauche(x,y,N):
-    return (x-int(N/4))**2 + (y - int(N/4))**2
+    return (x-int(3*N/4))**2 + (y - int(N/4))**2
 
 def f_droite(x,y,N):
-    return (x-int(N/4))**2 + (y - int(3*N/4))**2
+    return (x-int(3*N/4))**2 + (y - int(3*N/4))**2
 
-def domaine(N):
+def dom_def(N):
+
+    ########### PENSER A METTRE UN MULTIPLE DE 12 COMME VALEUR DE N ############
+
     taille = (N+1)*(N+1)
 
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
-    y_haut = int(2*N/3)
-    y_bas = int(3*N/4)
+    y_haut = int(N/3)
+    y_bas = int(N/4)
     borne_gauche = int(N/4)
     borne_gaubouche = int(N/3)
     borne_droibouche = int(2*N/3)
@@ -71,24 +74,25 @@ def domaine(N):
     
     MAT = np.zeros((N+1,N+1))
 
-    #Construction Bouche
-    for i in range(y_haut,y_bas) :
-        for j in range (borne_gaubouche, borne_gauche , -1):
+    #Construction Bouche pour déformation
+    
+    for i in range(y_bas,y_haut) :
+        for j in range (borne_droibouche, borne_droite + 1):
             if i == (N - j) :
-                MAT[i][j-1] = 1
+                MAT[i][j] = 1.
 
-    for i in range (borne_gaubouche,borne_droibouche):
-        MAT[y_haut][i] = 1
+    for i in range (borne_gaubouche, borne_droibouche + 1):
+        MAT[y_haut][i] = 1.
 
 
-    for i in range (y_haut,y_bas):
-        MAT[i][i] = 1
+    for i in range (y_bas,y_haut):
+        MAT[i][i] = 1.
 
     fig = plt.figure(figsize = plt.figaspect(0.35))
     
-    ax = fig.add_subplot(111,projection = '3d')
+    ax = fig.add_subplot(111)
     X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,MAT, cmap = 'magma')
+    ax.contour(X,Y,MAT, cmap = 'magma')
     
     plt.xlabel("x")
     plt.ylabel("y")
@@ -139,39 +143,46 @@ def dist(MAT,N,dt):
 
     return dist.reshape((N+1,N+1))
 
-def BRYAN(N):
+def dom_init(N):
+
+    ########### PENSER A METTRE UN MULTIPLE DE 12 COMME VALEUR DE N ############
+    
     taille = (N+1)*(N+1)
 
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
-
-    y_haut = int(2*N/3)
-    y_bas = int(3*N/4)
-    borne_gauche = int(N/4)
-    borne_gaubouche = int(N/3)
-    borne_droibouche = int(2*N/3)
-    borne_droite = int(3*N/4)
     
     MAT = np.zeros((N+1,N+1))
 
     #Construction Bouche
 
-    for i in np.arange(int(N/4),int(3*N/4)):
+    for i in np.arange(int(N/4),int(3*N/4) +1):
         MAT[int(N/2)][i] = 1.
 
     #Construction des yeux
 
     #Oeil gauche
-    #for i in range (N+1):
-     #   for j in range (N+1):
-      #      if f_gauche(i,j,N) <= int(N/12)**2 :
-       #         MAT[i][j] = 1
+    for i in range (N+1):
+        for j in range (N+1):
+            if f_gauche(i,j,N) <= int(N/12)**2 :
+                MAT[i][j] = 1.
 
     #Oeil droit
-    #for i in range(N+1):
-     #   for j in range(N+1):
-      #      if f_droite(i,j,N) <= int(N/12)**2:
-       #         MAT[i][j] = 1
+    for i in range(N+1):
+        for j in range(N+1):
+            if f_droite(i,j,N) <= int(N/12)**2:
+                MAT[i][j] = 1.
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    
+    ax = fig.add_subplot(111)
+    X,Y = np.meshgrid(x,y)
+    ax.contour(X,Y,MAT, cmap = 'magma')
+    
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
     
     return MAT
 
