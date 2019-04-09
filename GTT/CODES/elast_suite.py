@@ -74,6 +74,11 @@ def dom_def(N):
     
     MAT = np.zeros((N+1,N+1))
 
+    MAT[0,:] = 1.
+    MAT[N,:] = 1.
+    MAT[:,0] = 1.
+    MAT[:,N] = 1.
+    
     #Construction Bouche pour déformation
     
     for i in range(y_bas,y_haut) :
@@ -112,6 +117,11 @@ def dom_init(N):
     
     MAT = np.zeros((N+1,N+1))
 
+    MAT[0,:] = 1.
+    MAT[N,:] = 1.
+    MAT[:,0] = 1.
+    MAT[:,N] = 1.
+    
     #Construction Bouche
 
     for i in np.arange(int(N/4),int(3*N/4) +1):
@@ -180,15 +190,15 @@ def chaleurdist(MAT,N,dt,t):
 
      taille = (N+1)*(N+1)
 
-     T = np.zeros((t+1,taille))          #Initialisation de la solution finale
+     T = np.zeros(taille)          #Initialisation de la solution finale
 
-     for i in range(N):
-         for j in range(N):
-             k = i + j*(N+1)
-             T[:,k] = MAT[j][i]
+     for i in range(N+1):
+         for j in range(N+1):
+             k = i*(N+1) + j
+             T[k] = MAT[i][j]
 
      for i in range(t):
-         T[i+1,:] = sci.spsolve(matrix_lap(N,dt), T[i,:])
+         T = sci.spsolve(matrix_lap(N,dt), T)
          
      return T
 
@@ -199,7 +209,7 @@ def dist(MAT,N,dt):
 
     T = chaleurdist(MAT,N,dt,1)
 
-    dist  = -np.log(T[1,:])*np.sqrt(dt)
+    dist  = -np.log(T)*np.sqrt(dt)
     dist[~np.isfinite(dist)] = 0 
 
     #fig = plt.figure(figsize = plt.figaspect(0.35))
@@ -207,7 +217,7 @@ def dist(MAT,N,dt):
     #ax = fig.add_subplot(111,projection = '3d')
     #X,Y = np.meshgrid(x,y)
     #ax.plot_surface(X,Y,dist.reshape(N+1,N+1), cmap = 'magma')
-    
+
     #plt.xlabel("x")
     #plt.ylabel("y")
 
@@ -287,9 +297,6 @@ def matrix_croi(N):
 
     #Construction de la matrice creuse
     A = sparse.spdiags(diags,[-(N+2),-N,N,(N+2)],taille,taille, format = "csr")
-
-    return A
-
 
     return A
 
@@ -378,17 +385,17 @@ def second_membre(N,mu):
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)    
 
-    DIST = dist(dom_def(N),N,0.00001)
-    
-    F = DIST*BRYAN(N)
+    DIST = dist(dom_init(N),N,0.00001)
 
-    S = np.zeros(2*taille)
+    F = DIST*np.transpose(dom_def(N))
     
+    S = np.zeros(2*taille)
+
     for i in range(N+1):
         for j in range(N+1):
             k = i + j*(N+1)
             S[k] = 0
-            S[k+ taille] = F[i][j]/mu
+            S[k+ taille] = -F[i][j]/mu 
 
     return S
 
@@ -447,6 +454,8 @@ def deformation(N,mu,lamb):
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
+    DIST = dist(dom_init(N),N,0.00001)*np.transpose(dom_def(N))
+    
     [U1,U2] = resolution(N,mu,lamb)
 
     U1 = U1.reshape(N+1,N+1)
@@ -454,15 +463,14 @@ def deformation(N,mu,lamb):
 
     Bryan = BRYAN(N)
 
-            
     fig = plt.figure(figsize = [16,12])
     
     ax = fig.add_subplot(111, projection = '3d')
 
     X,Y = np.meshgrid(x,y)
 
-    X = X + U1
-    Y = Y + U2
+    X =  X + U1
+    Y =  Y + U2
     
     ax.plot_surface(X,Y,Bryan)
     plt.title("Solution discrétisée U1")
