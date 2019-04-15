@@ -378,26 +378,25 @@ def matrix_elas(N,mu,lamb):
 
     return MATRIX
 
-def second_membre(N,mu):
+def second_membre(N,mu,lamb):
 
     taille = (N+1)*(N+1)
 
-    x = np.linspace(0,1,N+1)
-    y = np.linspace(0,1,N+1)    
-
-    DIST = dist(dom_init(N),N,0.00001)
-
-    F = DIST*np.transpose(dom_def(N))
-    
+     
+    MAT = sci.aslinearoperator(matrix_elas(N,mu,lamb))
+    DIST = dist(dom_def(N),N,0.00001)
     S = np.zeros(2*taille)
-
+    F = DIST*dom_init(N)
     for i in range(N+1):
         for j in range(N+1):
-            k = i + j*(N+1)
+            k = i*(N+1) + j
             S[k] = 0
-            S[k+ taille] = -F[i][j]/mu 
+            S[k+ taille] = DIST[i][j]/mu 
+    
+    f = -MAT.dot(S)
 
-    return S
+    
+    return [f,S]
 
 def resolution(N,mu,lamb):
     
@@ -411,8 +410,9 @@ def resolution(N,mu,lamb):
     delta = (lamb + mu)/mu
 
     MAT = matrix_elas(N,mu,lamb)
-
-    U = sci.spsolve(MAT,second_membre(N,mu))
+    [f,S] = second_membre(N,mu,lamb)
+    
+    U = sci.spsolve(MAT,f)
 
     U1 = U[0:taille]
     U2 = U[taille : 2*taille]
@@ -454,7 +454,6 @@ def deformation(N,mu,lamb):
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
-    DIST = dist(dom_init(N),N,0.00001)*np.transpose(dom_def(N))
     
     [U1,U2] = resolution(N,mu,lamb)
 
@@ -465,14 +464,14 @@ def deformation(N,mu,lamb):
 
     fig = plt.figure(figsize = [16,12])
     
-    ax = fig.add_subplot(111, projection = '3d')
+    ax = fig.add_subplot(111)
 
     X,Y = np.meshgrid(x,y)
 
     X =  X + U1
     Y =  Y + U2
     
-    ax.plot_surface(X,Y,Bryan)
+    ax.contour(X,Y,Bryan)
     plt.title("Solution discrétisée U1")
     plt.xlabel("x")
     plt.ylabel("y")
