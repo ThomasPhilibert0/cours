@@ -74,10 +74,10 @@ def dom_def(N):
     
     MAT = np.zeros((N+1,N+1))
 
-    MAT[0,:] = 1.
-    MAT[N,:] = 1.
-    MAT[:,0] = 1.
-    MAT[:,N] = 1.
+    #MAT[0,:] = 1.
+    #MAT[N,:] = 1.
+    #MAT[:,0] = 1.
+    #MAT[:,N] = 1.
     
     #Construction Bouche pour déformation
     
@@ -117,15 +117,15 @@ def dom_init(N):
     
     MAT = np.zeros((N+1,N+1))
 
-    MAT[0,:] = 1.
-    MAT[N,:] = 1.
-    MAT[:,0] = 1.
-    MAT[:,N] = 1.
+    #MAT[0,:] = 1.
+    #MAT[N,:] = 1.
+    #MAT[:,0] = 1.
+    #MAT[:,N] = 1.
     
     #Construction Bouche
 
     for i in np.arange(int(N/4),int(3*N/4) +1):
-        MAT[int(N/2)][i] = 1.
+        MAT[int(2*N/3)][i] = 1.
 
     #fig = plt.figure(figsize = plt.figaspect(0.35))
     
@@ -382,21 +382,31 @@ def second_membre(N,mu,lamb):
 
     taille = (N+1)*(N+1)
 
-     
-    MAT = sci.aslinearoperator(matrix_elas(N,mu,lamb))
+    DEF = dom_def(N)
+    INIT = dom_init(N)
+    
     DIST = dist(dom_def(N),N,0.00001)
-    S = np.zeros(2*taille)
-    F = DIST*dom_init(N)
-    for i in range(N+1):
-        for j in range(N+1):
-            k = i*(N+1) + j
-            S[k] = 0
-            S[k+ taille] = DIST[i][j]/mu 
-    
-    f = -MAT.dot(S)
 
+    F = DIST*INIT
+
+    M = 0.1
     
-    return [f,S]
+    F[0,:] = F[int(2*N/3),:]
+    F[N,:] = F[int(2*N/3),:]
+    
+    for i in range(0,int(N/4)):
+        F[0,i] = M
+        F[N,i] = M
+        F[0,N-i] = M
+        F[N,N-i] = M 
+
+    F[int(2*N/3),:] = np.zeros(N+1)
+    
+    S = np.zeros(2*taille)
+
+    S[taille:2*taille] = np.ravel(F)/mu
+    
+    return [F,S]
 
 def resolution(N,mu,lamb):
     
@@ -410,9 +420,10 @@ def resolution(N,mu,lamb):
     delta = (lamb + mu)/mu
 
     MAT = matrix_elas(N,mu,lamb)
-    [f,S] = second_membre(N,mu,lamb)
+
+    [F,S] = second_membre(N,mu,lamb)
     
-    U = sci.spsolve(MAT,f)
+    U = sci.spsolve(MAT,S)
 
     U1 = U[0:taille]
     U2 = U[taille : 2*taille]
@@ -462,19 +473,35 @@ def deformation(N,mu,lamb):
 
     Bryan = BRYAN(N)
 
-    fig = plt.figure(figsize = [16,12])
+    fig = plt.figure(figsize = [20,16])
     
-    ax = fig.add_subplot(111)
+    ax = fig.add_subplot(132)
 
     X,Y = np.meshgrid(x,y)
 
-    X =  X + U1
-    Y =  Y + U2
+    X1 =  X + U1
+    Y1 =  Y + U2
     
-    ax.contour(X,Y,Bryan)
-    plt.title("Solution discrétisée U1")
+    ax.contourf(X1,Y1,Bryan)
+    plt.title("Bryan quand y a pas GTT")
     plt.xlabel("x")
     plt.ylabel("y")
 
+    ax = fig.add_subplot(131)
+    ax.contourf(X,Y,Bryan)
+    plt.title("Bryan avant GTT")
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    ax = fig.add_subplot(133)
+
+    X2 =  X - U1
+    Y2 =  Y - U2
+    
+    ax.contourf(X2,Y2,Bryan)
+    plt.title("Bryan après GTT")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    
     plt.show()
     
