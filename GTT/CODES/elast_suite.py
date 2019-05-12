@@ -389,7 +389,7 @@ def second_membre(N,mu,lamb):
 
     F = DIST*INIT
 
-    M = 0.1
+    M = np.min(F[int(2*N/3),int(N/4):int(3*N/4)])
     
     F[0,:] = F[int(2*N/3),:]
     F[N,:] = F[int(2*N/3),:]
@@ -503,5 +503,5 @@ def deformation(N,mu,lamb):
     plt.xlabel("x")
     plt.ylabel("y")
     
-    plt.show()
-    
+    plt.show() 
+
