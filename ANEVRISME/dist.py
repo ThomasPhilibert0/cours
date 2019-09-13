@@ -6,6 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from scipy.sparse import bmat
 from math import pi
 from dom import Dom_init
+from dom import masque
 
 def matrix_lap2(N,dt):
     """Retourne une matrice qui discrétise le laplacien de u dans le domaine Omega = [xmin,xmax,ymin,ymax], découpé en N intervalles en x et y. La matrice finale est une matrice scipy.sparse CSR matrix. Cette matrice est de taille (N+1)*(N+1)"""
@@ -58,9 +59,15 @@ def chaleurdist(N, dt, ray_tub, R, Hg, Hd, Lb, angle):
      x = np.linspace(0,1,N+1)
      y = np.linspace(0,1,N+1)
 
-     taille1 = (N+1)*(N+1)
+     taille = (N+1)*(N+1)
 
-     T = Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle)
+     T = np.ones(taille)
+     MAT = Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle)
+
+     for i in range(1,N):
+         for j in range(1,N):
+             k = i*(N+1) + j
+             T[k] = MAT[i][j]
 
      D = sci.spsolve(matrix_lap2(N,dt), T)
          
@@ -75,7 +82,7 @@ def dist(N, dt, ray_tub, R, Hg, Hd, Lb, angle):
 
     dist  = -np.log(T)*np.sqrt(dt)
 
-    print(np.max(dist))
+    #print(np.max(dist))
 
     fig = plt.figure(figsize = plt.figaspect(0.35))
     
@@ -91,3 +98,23 @@ def dist(N, dt, ray_tub, R, Hg, Hd, Lb, angle):
     return dist
 
     
+def penalisation(N, dt, ray_tub, R, Hg, Hd, Lb, angle):
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    DIST = dist(N, dt, ray_tub, R, Hg, Hd, Lb, angle)
+    MASK = masque(N, ray_tub, R, Hg, Hd, Lb, angle)
+
+    PENAL = MASK*DIST.reshape(N+1,N+1)
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(111, projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,PENAL, cmap = 'hot')
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
+
+    return PENAL
