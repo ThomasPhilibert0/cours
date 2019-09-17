@@ -108,6 +108,8 @@ def penalisation(N, dt, ray_tub, R, Hg, Hd, Lb, angle):
 
     PENAL = MASK*DIST.reshape(N+1,N+1)
 
+    np.savetxt('penal_30',PENAL)
+    
     fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111, projection = '3d')
     X,Y = np.meshgrid(x,y)

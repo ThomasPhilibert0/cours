@@ -60,8 +60,8 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
         MAT[k-ray_tub][i] = 1
         MAT[k+ray_tub][i] = 1
 
-    for r in range(k - ray_tub+1, k + ray_tub):
-        MAT[r][int(N/2)-ray_tub] = 0
+    #for r in range(k - ray_tub+1, k + ray_tub):
+        #MAT[r][int(N/2)-ray_tub] = 0
     
 
     #Construction de l'artère horizontale droite "haute" repéré grâce au paramètre Hd (compris entre 5 (tout en haut) et 95 (tout en bas)) de rayon d.
@@ -78,8 +78,8 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
         MAT[k-ray_tub][N-i] = 1
         MAT[k+ray_tub][N-i] = 1
 
-    for r in range(k - ray_tub+1, k + ray_tub):
-        MAT[r][int(N/2)+ray_tub] = 0
+    #for r in range(k - ray_tub+1, k + ray_tub):
+        #MAT[r][int(N/2)+ray_tub] = 0
 
     #Construction de l'artère verticale "basse" de rayon d et de longueur Lb.
     j = 0
@@ -120,7 +120,7 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
     for i in range(int(N/2)+1):
         for k in range(j+1):
             if a*x[i] + b_2 >= y[k]:
-                if a*x[i-1] + b_2 <= y[k]:
+                if a*x[i-1] + b_2 <= y[k]  or a*x[i] + b_2 <= y[k+1] :
                     MAT[k][i] = 1
                     MAT[k][N-i] = 1
     

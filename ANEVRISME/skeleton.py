@@ -9,39 +9,25 @@ from dom import Dom_init
 from dom import masque
 from dist import penalisation
 
-def skeleton(N, dt, ray_tub, R, Hg, Hd, Lb, angle):
+
+def skeleton(N) :
 
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
-    SKELET = penalisation(N, dt, ray_tub, R, Hg, Hd, Lb, angle)
-    A = np.zeros((N+1,N+1))
-    epsilon = 1/(2*(N+1))
-    
+    SKELET = np.loadtxt("penal_30_ferme")
+
     for j in range(N+1):
         MAX = max(SKELET[j,:])
         for i in range(N+1):
             if SKELET[j][i] != MAX :
-                A[j][i] = 0
-            else :
-                A[j][i] = MAX
-
-    for i in range(N+1):
-        if i < int((N+1)/2) - 1 or i > int((N+1)/2) +1:
-            MAX = max(SKELET[int((N+1)/2)+int(R*N):,i])
-            for j in range(int((N+1)/2)+int(R*N),N+1):
-                if SKELET[j][i] != MAX :
-                    A[j][i] = 0
-                else :
-                    A[j][i] = MAX
-
-
-        
-    
+                SKELET[j][i] = 0
+                
     fig = plt.figure(figsize = plt.figaspect(0.35))
+
     ax = fig.add_subplot(111, projection = '3d')
     X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,A, cmap = 'hot')
+    ax.plot_surface(X,Y,SKELET, cmap = 'hot')
     plt.xlabel("x")
     plt.ylabel("y")
 
