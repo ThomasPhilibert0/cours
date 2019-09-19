@@ -60,8 +60,8 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
         MAT[k-ray_tub][i] = 1
         MAT[k+ray_tub][i] = 1
 
-    #for r in range(k - ray_tub+1, k + ray_tub):
-        #MAT[r][int(N/2)-ray_tub] = 0
+    for r in range(k - ray_tub+1, k + ray_tub):
+        MAT[r][int(N/2)-ray_tub] = 0
     
 
     #Construction de l'artère horizontale droite "haute" repéré grâce au paramètre Hd (compris entre 5 (tout en haut) et 95 (tout en bas)) de rayon d.
@@ -78,8 +78,8 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
         MAT[k-ray_tub][N-i] = 1
         MAT[k+ray_tub][N-i] = 1
 
-    #for r in range(k - ray_tub+1, k + ray_tub):
-        #MAT[r][int(N/2)+ray_tub] = 0
+    for r in range(k - ray_tub+1, k + ray_tub):
+        MAT[r][int(N/2)+ray_tub] = 0
 
     #Construction de l'artère verticale "basse" de rayon d et de longueur Lb.
     j = 0
@@ -138,7 +138,7 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
 def masque(N, ray_tub, R, Hg, Hd, Lb, angle):
 
     #Définition du maillage. On choisit de découper le segment [0,1] en N intervalles. Ce qui donne un problème de taille (N+1)*(N+1).
-    #Prendre de préférance un N pair (pour assurer (N/2) entier)
+    #Prendre de préférence un N pair (pour assurer (N/2) entier)
     
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)   
@@ -245,12 +245,12 @@ def masque(N, ray_tub, R, Hg, Hd, Lb, angle):
                 MAT[k][N-i] = 0
     
 
-    #fig = plt.figure(figsize = plt.figaspect(0.35))
-    #ax = fig.add_subplot(111)
-    #X,Y = np.meshgrid(x,y)
-    #ax.contourf(X,Y,MAT, cmap = 'magma')
-    #plt.xlabel("x")
-    #plt.ylabel("y")
-    #plt.show()
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(111)
+    X,Y = np.meshgrid(x,y)
+    ax.contourf(X,Y,MAT, cmap = 'magma')
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.show()
     
     return MAT
