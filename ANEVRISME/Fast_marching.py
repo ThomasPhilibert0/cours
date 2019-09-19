@@ -22,11 +22,11 @@ def distance(N, ray_tub, R, Hg, Hd, Lb, angle):
                 MAT[j][i] = 1
                 
 
-    D = skfmm.distance(MAT, dx=1e-)
+    D = skfmm.distance(MAT, dx=1e-5)
+
     F = D*MASK
 
     np.savetxt('fast_marching_3000',F)
-
 
     fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111, projection = '3d')

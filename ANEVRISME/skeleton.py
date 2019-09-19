@@ -10,7 +10,7 @@ from dom import masque
 from dist import penalisation
 
 
-def skeleton(N,lim) :
+def skeleton_maxloc(N,lim) :
 
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
@@ -68,10 +68,32 @@ def skeleton(N,lim) :
     ax = fig2.add_subplot(111)
     X,Y = np.meshgrid(x,y)
     ax.contourf(X,Y,SKELET, cmap = 'binary')
-    #ax.colorbar()
+    #plt.colorbar()
     plt.xlabel("x")
     plt.ylabel("y")
 
     plt.show()
 
     return SKELET
+
+def skeleton_grad(N) :
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    MAT = np.loadtxt("fast_marching_3000")
+    SKELET = np.zeros((N+1,N+1))
+    
+    dy,dx = np.gradient(MAT)
+    
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+
+    ax = fig.add_subplot(111)
+    X,Y = np.meshgrid(x,y)
+    ax.quiver(X,Y,dx,dy)
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
+
+    return dy, dx
