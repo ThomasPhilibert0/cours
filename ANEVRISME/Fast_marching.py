@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from dom import masque
 
 
-def distance(N, ray_tub, R, Hg, Hd, Lb, angle):
+def fast_marching(N, ray_tub, R, Hg, Hd, Lb, angle):
 
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
@@ -22,7 +22,7 @@ def distance(N, ray_tub, R, Hg, Hd, Lb, angle):
                 MAT[j][i] = 1
                 
 
-    D = skfmm.distance(MAT, dx=1e-5)
+    D = skfmm.distance(MAT, dx=1e-3)
 
     F = D*MASK
 
