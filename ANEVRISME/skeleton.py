@@ -85,15 +85,62 @@ def skeleton_grad(N) :
     SKELET = np.zeros((N+1,N+1))
     
     dy,dx = np.gradient(MAT)
-    
-    fig = plt.figure(figsize = plt.figaspect(0.35))
+    A = np.zeros((N+1,N+1))
 
+    for i in range(1,N):
+        for j in range(1,N):
+            if dx[j][i-1]*dx[j][i+1] < 0:
+                A[j][i] = A[j][i]+1
+            if dy[j-1][i]*dy[j+1][i] < 0:
+                A[j][i] = A[j][i]+1
+    
+    #fig = plt.figure(figsize = plt.figaspect(0.35))
+    #ax = fig.add_subplot(111)
+    #X,Y = np.meshgrid(x,y)
+    #ax.quiver(X,Y,dx,dy)
+    #plt.xlabel("x")
+    #plt.ylabel("y")
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111)
     X,Y = np.meshgrid(x,y)
-    ax.quiver(X,Y,dx,dy)
+    ax.contourf(X,Y,A, cmap = 'magma')
     plt.xlabel("x")
     plt.ylabel("y")
-
     plt.show()
 
-    return dy, dx
+    return A
+
+def BOTH(N):
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    MAT_1 = skeleton_grad(N)
+    MAT_2 = skeleton_maxloc(N,1)
+
+    MAT = MAT_1 + MAT_2
+    np.savetxt('SKEL',MAT)
+    
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(111)
+    X,Y = np.meshgrid(x,y)
+    ax.contourf(X,Y,MAT, cmap = 'magma')
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.show()
+    
+def Skeleton(N,n):
+    MAT = np.loadtxt("SKEL")
+    for i in range(N+1):
+        for j in range(N+1):
+            if MAT[j][i] < n :
+                MAT[j][i] = 0
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(111)
+    X,Y = np.meshgrid(x,y)
+    ax.contourf(X,Y,MAT, cmap = 'magma')
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.show()
