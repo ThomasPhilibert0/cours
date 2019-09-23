@@ -54,62 +54,67 @@ def matrix_lap2(N,dt):
     return A
 
 
-def chaleurdist(N, dt, ray_tub, R, Hg, Hd, Lb, angle):
+def dist(MAT,dt):
 
-     x = np.linspace(0,1,N+1)
-     y = np.linspace(0,1,N+1)
+    """Affiche la matrice de la fonction distance de la matrice MAT (composée de 0 SAUF à l'interface (frontière) où les valeurs sont de 1) d'un domaine de taille ((N+1),(N+1))"""
 
-     taille = (N+1)*(N+1)
-
-     T = np.ones(taille)
-     MAT = Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle)
-
-     for i in range(1,N):
-         for j in range(1,N):
-             k = i*(N+1) + j
-             T[k] = MAT[i][j]
-
-     D = sci.spsolve(matrix_lap2(N,dt), T)
-         
-     return D
-
-def dist(N, dt, ray_tub, R, Hg, Hd, Lb, angle):
-
+    N = np.shape(MAT)[0] - 1
+    
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
+    
+    taille = (N+1)*(N+1)
+    
+    T = np.ones(taille)
 
-    T = chaleurdist(N, dt, ray_tub, R, Hg, Hd, Lb, angle)
+    #On transforme la matrice MAT en un vecteur de taille (N+1)*(N+1)
+    for i in range(1,N):
+        for j in range(1,N):
+            k = i*(N+1) + j
+            T[k] = MAT[i][j]
 
-    dist  = -np.log(T)*np.sqrt(dt)
+    #On résoud avec 1 itération de l'équation de la chaleur
+    D = sci.spsolve(matrix_lap2(N,dt), T)
 
-    #print(np.max(dist))
+    #On calcul la fonction distance
+    DIST = -np.log(D)*np.sqrt(dt)
 
-    fig = plt.figure(figsize = plt.figaspect(0.35))
+    #AFFICHAGE
+
+    fig = plt.figure(figsize = plt.figaspect(0.5))
     
     ax = fig.add_subplot(111, projection = '3d')
     X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,dist.reshape(N+1,N+1), cmap = 'hot')
+    ax.plot_surface(X,Y,DIST.reshape(N+1,N+1), cmap = 'hot')
     
     plt.xlabel("x")
     plt.ylabel("y")
 
     plt.show()
 
-    return dist
+    return DIST
 
     
-def penalisation(N, dt, ray_tub, R, Hg, Hd, Lb, angle):
+def penalisation(MAT,MASK,dt):
 
+    """Retourne la matrice de la fonction distance pénalisée, i.e, on affiche uniquement les 'points distances' qui sont DANS le domaine. On pénalise par notre masque du fichier dom.py.
+    Penser à faire le masque en même temps que le domaine initial pour s'assure les mêmes caractères."""
+
+    N = np.shape(MAT)[0] - 1
+    
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
-    DIST = dist(N, dt, ray_tub, R, Hg, Hd, Lb, angle)
-    MASK = masque(N, ray_tub, R, Hg, Hd, Lb, angle)
+    #On calcule la fonction distance de MAT
+    DIST = dist(MAT,dt)
 
+    #On créé la matrice de pénalisation
     PENAL = MASK*DIST.reshape(N+1,N+1)
 
-    np.savetxt('penal_30_7',PENAL)
-    
+    #Enlever le commentaire suivant pour enregistrer la matrice sous format txt.
+    #np.savetxt('penal_2000_7',PENAL)
+
+    #AFFICHAGE
     fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111, projection = '3d')
     X,Y = np.meshgrid(x,y)

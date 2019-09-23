@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt # Pour les graphiques
 from math import pi
 
 def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
+    """Retourne la matrice du domaine initial avec N nombre de points du maillage, ray_tub le rayon des artères, R le rayon du cercle, Hg et Hd, en pourcentage, la hauteur des artères gauche et droite
+    et angle l'angle, en degré, entre les artères basses"""
 
     #Définition du maillage. On choisit de découper le segment [0,1] en N intervalles. Ce qui donne un problème de taille (N+1)*(N+1).
     #Prendre de préférance un N pair (pour assurer (N/2) entier)
@@ -137,6 +139,8 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
 
 def masque(N, ray_tub, R, Hg, Hd, Lb, angle):
 
+    """Construit le masque du domaine initial, i.e des 0 à l'extérieur du domaine et des 1 à l'intérieur."""
+    
     #Définition du maillage. On choisit de découper le segment [0,1] en N intervalles. Ce qui donne un problème de taille (N+1)*(N+1).
     #Prendre de préférence un N pair (pour assurer (N/2) entier)
     

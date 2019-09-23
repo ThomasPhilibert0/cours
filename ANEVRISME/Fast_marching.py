@@ -6,14 +6,19 @@ import matplotlib.pyplot as plt
 from dom import masque
 
 
-def fast_marching(N, ray_tub, R, Hg, Hd, Lb, angle):
+def fast_marching(MASK):
 
+    """Retourne et affiche la matrice de la fonction distance selon la méthode du Fast_marching d'un domaine. Ce code ne fonctionne que si la matrice mise en paramètre est de type 'masque', i.e 
+    une matrice avec des 0 à l'extérieur du domaine et des 1 à l'intérieur. On ajoutera un paramètre de précision pour la méthode."""
+
+    N = np.shape(MASK)[0] - 1
+    
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
-    MAT = np.zeros((N+1,N+1))
-    
 
-    MASK = masque(N, ray_tub, R, Hg, Hd, Lb, angle)
+    MAT = np.zeros((N+1,N+1))
+
+    #On créé la matrice relative au masque de façon à s'adapter à la fonction python
     for i in range(N+1):
         for j in range(N+1):
             if MASK[j][i] == 0 :
@@ -22,12 +27,17 @@ def fast_marching(N, ray_tub, R, Hg, Hd, Lb, angle):
                 MAT[j][i] = 1
                 
 
-    D = skfmm.distance(MAT, dx=1e-3)
+    #Utilisation du package skfmm 
+    D = skfmm.distance(MAT, dx = 1/N)
 
+    #On pénalise
     F = D*MASK
 
-    np.savetxt('fast_marching_3000',F)
+    #Enlever le commentaire de la ligne ci-dessous pour sauvegarder la matrice
+    #np.savetxt('fast_marching_2000_2',F)
 
+    #AFFICHAGE
+    
     fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111, projection = '3d')
     X,Y = np.meshgrid(x,y)

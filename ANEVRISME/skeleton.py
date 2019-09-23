@@ -10,8 +10,13 @@ from dom import masque
 from dist import penalisation
 
 
-def skeleton_maxloc(N,lim) :
+def skeleton_maxloc(DIST,lim) :
 
+    """Affiche le skeleton selon une méthode de maximum local.En paramètre on prend la matrice de la fonction distance et lim variant de 0 à 4.
+    Ici on sélectionne 4 directions et la valeur du point du maillage oscille entre 0 et 4 selon dans combien de directionil est un maximum local."""
+
+    N = np.shape(DIST)[0] - 1
+    
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
@@ -22,25 +27,23 @@ def skeleton_maxloc(N,lim) :
     dir3 = 0
     dir4 = 0
 
-    MAT = np.loadtxt("fast_marching_3000")
     SKELET = np.zeros((N+1,N+1))
     
-
     for i in range(1,N):
         for j in range(1,N):
-            pix = MAT[i][j]
+            pix = DIST[i][j]
 
             #Première direction(verticale)
-            if pix > MAT[i-1][j] and pix > MAT[i+1][j]:
+            if pix > DIST[i-1][j] and pix > DIST[i+1][j]:
                 dir1 = 1
             #Seconde direction(horizontale)
-            if pix > MAT[i][j-1] and pix > MAT[i][j+1]:
+            if pix > DIST[i][j-1] and pix > DIST[i][j+1]:
                 dir2 = 1
             #Troisieme direction(diagonale g_d)
-            if pix > MAT[i-1][j-1] and pix > MAT[i+1][j+1]:
+            if pix > DIST[i-1][j-1] and pix > DIST[i+1][j+1]:
                 dir3 = 1
             #Quatrième direction(diagonale d_g)
-            if pix > MAT[i+1][j-1] and pix > MAT[i-1][j+1]:
+            if pix > DIST[i+1][j-1] and pix > DIST[i-1][j+1]:
                 dir4 = 1
 
             DIR = dir1 + dir2 + dir3 + dir4
@@ -55,92 +58,101 @@ def skeleton_maxloc(N,lim) :
             dir3 = 0
             dir4 = 0    
 
-    fig = plt.figure(figsize = plt.figaspect(0.35))
-
-    ax = fig.add_subplot(111, projection = '3d')
-    X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,MAT, cmap = 'hot')
-    plt.xlabel("x")
-    plt.ylabel("y")
-
-    fig2 = plt.figure(figsize = plt.figaspect(0.35))
-
-    ax = fig2.add_subplot(111)
+    fig1 = plt.figure(figsize = plt.figaspect(0.5))
+    ax = fig1.add_subplot(111)
     X,Y = np.meshgrid(x,y)
     ax.contourf(X,Y,SKELET, cmap = 'binary')
-    #plt.colorbar()
     plt.xlabel("x")
     plt.ylabel("y")
+    plt.title("Skeleton par méthode du Max Local")
 
     plt.show()
 
     return SKELET
 
-def skeleton_grad(N) :
+def aff_grad(DIST) :
+
+    """Affiche la représentation du gradient pour la matrice de la fonction distance donnée en paramètre """
+    N = np.shape(DIST)[0] - 1
+    
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    #Calcul du gradient
+    dy,dx = np.gradient(DIST)
+
+    #AFFICHAGE
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(111)
+    X,Y = np.meshgrid(x,y)
+    ax.quiver(X,Y,dx,dy)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("Gradient de la fonciton distance")
+ 
+
+    plt.show()
+
+def skeleton_grad(DIST):
+    """Retourne le skeleton selon la méthode de maximum local via le gradient. Si il y a un changement de signe pour a dérivée en x ou en y alors c'est un max local. On ajoute +1 à chaque fois que
+    c'est un max local dans une des 2 dérivées."""
+    
+    N = np.shape(DIST)[0] - 1
 
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
-    MAT = np.loadtxt("fast_marching_3000")
-    SKELET = np.zeros((N+1,N+1))
+    #Calcul du gradient
+    dy,dx = np.gradient(DIST)
     
-    dy,dx = np.gradient(MAT)
-    A = np.zeros((N+1,N+1))
+    SKELET = np.zeros((N+1,N+1))
 
+    #Les conditions de max local
     for i in range(1,N):
         for j in range(1,N):
             if dx[j][i-1]*dx[j][i+1] < 0:
-                A[j][i] = A[j][i]+1
+                SKELET[j][i] = SKELET[j][i]+1
             if dy[j-1][i]*dy[j+1][i] < 0:
-                A[j][i] = A[j][i]+1
-    
-    #fig = plt.figure(figsize = plt.figaspect(0.35))
-    #ax = fig.add_subplot(111)
-    #X,Y = np.meshgrid(x,y)
-    #ax.quiver(X,Y,dx,dy)
-    #plt.xlabel("x")
-    #plt.ylabel("y")
+                SKELET[j][i] = SKELET[j][i]+1
 
+    #AFFICHAGE
     fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111)
     X,Y = np.meshgrid(x,y)
-    ax.contourf(X,Y,A, cmap = 'magma')
+    ax.contourf(X,Y,SKELET, cmap = 'binary')
     plt.xlabel("x")
     plt.ylabel("y")
+    plt.title("Skeleton par méthode du gradient")
+
     plt.show()
 
-    return A
+    return SKELET
 
-def BOTH(N):
+def combinaison(DIST, precision):
+    """Construit la matrice du skeleton par combinaison des 2 méthodes précédentes. On a donc une précision variant entre 1 et 6."""
+
+    N = np.shape(DIST)[0] - 1
+    
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
-    MAT_1 = skeleton_grad(N)
-    MAT_2 = skeleton_maxloc(N,1)
+
+    MAT_1 = skeleton_grad(DIST)
+    MAT_2 = skeleton_maxloc(DIST,1)
 
     MAT = MAT_1 + MAT_2
-    np.savetxt('SKEL',MAT)
     
-    fig = plt.figure(figsize = plt.figaspect(0.35))
-    ax = fig.add_subplot(111)
-    X,Y = np.meshgrid(x,y)
-    ax.contourf(X,Y,MAT, cmap = 'magma')
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.show()
-    
-def Skeleton(N,n):
-    MAT = np.loadtxt("SKEL")
     for i in range(N+1):
         for j in range(N+1):
-            if MAT[j][i] < n :
-                MAT[j][i] = 0
+            if MAT[i][j] < precision :
+                MAT[i][j] = 0
 
-    x = np.linspace(0,1,N+1)
-    y = np.linspace(0,1,N+1)
+    #AFFICHAGE
     fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111)
     X,Y = np.meshgrid(x,y)
-    ax.contourf(X,Y,MAT, cmap = 'magma')
+    ax.contourf(X,Y,MAT, cmap = 'binary')
     plt.xlabel("x")
     plt.ylabel("y")
+    plt.title("Skeleton par combinaison des 2 méthodes")
+
     plt.show()
