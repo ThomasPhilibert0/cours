@@ -83,9 +83,9 @@ def dist(MAT,dt):
 
     fig = plt.figure(figsize = plt.figaspect(0.5))
     
-    ax = fig.add_subplot(111, projection = '3d')
+    ax = fig.add_subplot(111)
     X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,DIST.reshape(N+1,N+1), cmap = 'hot')
+    ax.contour(X,Y,DIST.reshape(N+1,N+1), cmap = 'hot')
     
     plt.xlabel("x")
     plt.ylabel("y")

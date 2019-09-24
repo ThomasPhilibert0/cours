@@ -105,11 +105,11 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
         
     b = y[j] - np.tan(pi/2 - théta)*x[i]
     a = np.tan(pi/2 - théta)
-
+    epsilon = 10**(-16)
     for i in range(int(N/2)-ray_tub+1):
         for k in range(j+1):
-            if a*x[i] + b >= y[k]:
-                if a*x[i-1] + b <= y[k] or a*x[i] + b <= y[k+1]:
+            if a*x[i] + b >= y[k] + epsilon:
+                if a*x[i-1] + b <= y[k] + epsilon or a*x[i] + b <= y[k+1] + epsilon:
                     MAT[k][i] = 1
                     MAT[k][N-i] = 1
 
@@ -121,8 +121,8 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
 
     for i in range(int(N/2)+1):
         for k in range(j+1):
-            if a*x[i] + b_2 >= y[k]:
-                if a*x[i-1] + b_2 <= y[k]  or a*x[i] + b_2 <= y[k+1] :
+            if a*x[i] + b_2 >= y[k] + epsilon :
+                if a*x[i-1] + b_2 <= y[k] + epsilon  or a*x[i] + b_2 <= y[k+1] + epsilon :
                     MAT[k][i] = 1
                     MAT[k][N-i] = 1
     
@@ -226,13 +226,14 @@ def masque(N, ray_tub, R, Hg, Hd, Lb, angle):
     théta = (angle*pi)/180
     while MAT[j][i] == 0:
         j = j + 1
-        
+
+    epsilon = 10**(-16)
     b = y[j] - np.tan(pi/2 - théta)*x[i]
     a = np.tan(pi/2 - théta)
 
     for i in range(int(N/2)+1):
         for k in range(j+1):
-            if a*x[i] + b >= y[k]:
+            if a*x[i] + b >= y[k] + epsilon:
                 MAT[k][i] = 1
                 MAT[k][N-i] = 1
 
@@ -244,7 +245,7 @@ def masque(N, ray_tub, R, Hg, Hd, Lb, angle):
 
     for i in range(int(N/2)+1):
         for k in range(j+1):
-            if a*x[i] + b_2 >= y[k]:
+            if a*x[i] + b_2 >= y[k] + epsilon:
                 MAT[k][i] = 0
                 MAT[k][N-i] = 0
     
