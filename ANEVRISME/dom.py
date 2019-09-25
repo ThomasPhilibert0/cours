@@ -1,11 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt # Pour les graphiques
 from math import pi
+import time
 
 def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
     """Retourne la matrice du domaine initial avec N nombre de points du maillage, ray_tub le rayon des artères, R le rayon du cercle, Hg et Hd, en pourcentage, la hauteur des artères gauche et droite
     et angle l'angle, en degré, entre les artères basses"""
 
+    start_time = time.time()
+    
     #Définition du maillage. On choisit de découper le segment [0,1] en N intervalles. Ce qui donne un problème de taille (N+1)*(N+1).
     #Prendre de préférance un N pair (pour assurer (N/2) entier)
     
@@ -126,6 +129,7 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
                     MAT[k][i] = 1
                     MAT[k][N-i] = 1
     
+    print("Temps d'éxecution création Dom_Init : %s secondes ---" % (time.time() - start_time))
     
     fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111)
@@ -140,6 +144,8 @@ def Dom_init(N, ray_tub, R, Hg, Hd, Lb, angle):
 def masque(N, ray_tub, R, Hg, Hd, Lb, angle):
 
     """Construit le masque du domaine initial, i.e des 0 à l'extérieur du domaine et des 1 à l'intérieur."""
+
+    start_time = time.time()
     
     #Définition du maillage. On choisit de découper le segment [0,1] en N intervalles. Ce qui donne un problème de taille (N+1)*(N+1).
     #Prendre de préférence un N pair (pour assurer (N/2) entier)
@@ -250,6 +256,9 @@ def masque(N, ray_tub, R, Hg, Hd, Lb, angle):
                 MAT[k][N-i] = 0
     
 
+    print("Temps d'éxecution création Masque : %s secondes ---" % (time.time() - start_time))
+
+    
     fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111)
     X,Y = np.meshgrid(x,y)

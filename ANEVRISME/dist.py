@@ -7,6 +7,7 @@ from scipy.sparse import bmat
 from math import pi
 from dom import Dom_init
 from dom import masque
+import time
 
 def matrix_lap2(N,dt):
     """Retourne une matrice qui discrétise le laplacien de u dans le domaine Omega = [xmin,xmax,ymin,ymax], découpé en N intervalles en x et y. La matrice finale est une matrice scipy.sparse CSR matrix. Cette matrice est de taille (N+1)*(N+1)"""
@@ -100,6 +101,8 @@ def penalisation(MAT,MASK,dt):
     """Retourne la matrice de la fonction distance pénalisée, i.e, on affiche uniquement les 'points distances' qui sont DANS le domaine. On pénalise par notre masque du fichier dom.py.
     Penser à faire le masque en même temps que le domaine initial pour s'assure les mêmes caractères."""
 
+    start_time = time.time()
+    
     N = np.shape(MAT)[0] - 1
     
     x = np.linspace(0,1,N+1)
@@ -114,6 +117,8 @@ def penalisation(MAT,MASK,dt):
     #Enlever le commentaire suivant pour enregistrer la matrice sous format txt.
     #np.savetxt('penal_2000_7',PENAL)
 
+    print("Temps d'éxecution Distance_Chal : %s secondes ---" % (time.time() - start_time))
+    
     #AFFICHAGE
     fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111, projection = '3d')

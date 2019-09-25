@@ -4,13 +4,15 @@ import pylab as pl
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from dom import masque
-
+import time
 
 def fast_marching(MASK):
 
     """Retourne et affiche la matrice de la fonction distance selon la méthode du Fast_marching d'un domaine. Ce code ne fonctionne que si la matrice mise en paramètre est de type 'masque', i.e 
     une matrice avec des 0 à l'extérieur du domaine et des 1 à l'intérieur. On ajoutera un paramètre de précision pour la méthode."""
 
+    start_time = time.time()
+    
     N = np.shape(MASK)[0] - 1
     
     x = np.linspace(0,1,N+1)
@@ -36,6 +38,7 @@ def fast_marching(MASK):
     #Enlever le commentaire de la ligne ci-dessous pour sauvegarder la matrice
     #np.savetxt('fast_marching_2000_2',F)
 
+    print("Temps d'éxecution méthode Fast_Marching : %s secondes ---" % (time.time() - start_time))
     #AFFICHAGE
     
     fig = plt.figure(figsize = plt.figaspect(0.35))
