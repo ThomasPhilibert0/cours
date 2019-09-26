@@ -142,11 +142,11 @@ def skeleton_grad(DIST,MASK,lim):
 
 
 
-def isolation(SKELET):
+def isolation(SKELET,K):
 
     N = np.shape(SKELET)[0] - 1
 
-    diam = 5
+    diam = K
 
     ISO = np.zeros((N+1,N+1))
     
@@ -158,9 +158,9 @@ def isolation(SKELET):
         cpt = 0
         
         pix = SKELET[l][c]
-        if l > diam + 1 or l < N - diam or c > diam + 1 or c < N - diam:
-            for k in range(diam):
-                for m in range(diam):
+        if l > diam + 1 and l < N - diam and c > diam + 1 and c < N - diam:
+            for k in range(-diam, diam + 1):
+                for m in range(-diam, diam + 1):
                     if SKELET[l+k][c+m] != 0 :
                         cpt += 1
                 
