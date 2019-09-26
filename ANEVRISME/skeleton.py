@@ -144,6 +144,8 @@ def skeleton_grad(DIST,MASK,lim):
 
 def isolation(SKELET,K):
 
+    start_time = time.time()
+
     N = np.shape(SKELET)[0] - 1
 
     diam = K
@@ -159,14 +161,20 @@ def isolation(SKELET,K):
         
         pix = SKELET[l][c]
         if l > diam + 1 and l < N - diam and c > diam + 1 and c < N - diam:
-            for k in range(-diam, diam + 1):
-                for m in range(-diam, diam + 1):
+            k = -diam
+            while k <= diam and cpt <= 1 :
+                m = -diam
+                while m <= diam and cpt <= 1:
                     if SKELET[l+k][c+m] != 0 :
                         cpt += 1
-                
+                    m += 1
+                k += 1
             if cpt <= 1:
                 ISO[l][c] = 1
-        
+
+    print("Temps d'éxecution méthode d'isolation : %s secondes ---" % (time.time() - start_time))
+
+    
             
     #AFFICHAGE
     x = np.linspace(0,1,N+1)
@@ -181,3 +189,5 @@ def isolation(SKELET,K):
     plt.title("Points d'intersection")
 
     plt.show()
+
+    return np.nonzero(ISO)
