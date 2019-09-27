@@ -72,6 +72,7 @@ def skeleton_maxloc(DIST,MASK,lim) :
 def aff_grad(DIST) :
 
     """Affiche la représentation du gradient pour la matrice de la fonction distance donnée en paramètre """
+
     N = np.shape(DIST)[0] - 1
     
     x = np.linspace(0,1,N+1)
@@ -191,3 +192,70 @@ def isolation(SKELET,K):
     plt.show()
 
     return np.nonzero(ISO)
+
+
+def skeleton_maxloc_opti(DIST):
+
+    start_time = time.time()
+    
+    N = np.shape(DIST)[0] - 1
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    ligne,colonne = np.nonzero(DIST)
+
+    SKELET = np.zeros((N+1,N+1))
+
+    epsilon = 10**(-16)
+
+    for i in range(np.size(ligne)):
+
+        l = ligne[i]
+        c = colonne[i]
+
+        pix = DIST[l][c]
+
+        cpt = 0
+        
+        if l > 3 and l < N - 3 and c > 3 and c < N - 3 :
+
+            k = -2
+
+            while k <= 2 :
+
+                m = -2
+
+                while m <= 2 and pix > DIST[l+k][c+m] - epsilon : 
+
+                    if m == 0 and k == 0 :
+
+                        cpt = cpt
+
+                    else:
+
+                        cpt += 1
+
+                    m += 1
+
+                k += 1
+
+        
+            if cpt >= 24 :
+
+                SKELET[l][c] = 1
+
+        
+    print("Temps d'éxecution méthode d'isolation : %s secondes ---" % (time.time() - start_time))
+    
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(111)
+    X,Y = np.meshgrid(x,y)
+    ax.contourf(X,Y,SKELET, cmap = 'binary')
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("Points d'intersection")
+
+    plt.show()
+
+    return SKELET

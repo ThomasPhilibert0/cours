@@ -27,8 +27,8 @@ def fast_marching(MASK):
                 MAT[j][i] = -1
             else :
                 MAT[j][i] = 1
-                
 
+                
     #Utilisation du package skfmm 
     D = skfmm.distance(MAT, dx = 1/N)
 
