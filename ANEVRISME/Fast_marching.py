@@ -5,6 +5,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from dom import masque
 import time
+import scipy as sc
+from scipy import signal
 
 def fast_marching(MASK):
 
@@ -42,7 +44,14 @@ def fast_marching(MASK):
     #AFFICHAGE
     
     fig = plt.figure(figsize = plt.figaspect(0.35))
-    ax = fig.add_subplot(111, projection = '3d')
+    ax = fig.add_subplot(111)
+    X,Y = np.meshgrid(x,y)
+    ax.contour(X,Y,F, cmap = 'hot')
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    fig2 = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig2.add_subplot(111,projection = '3d')
     X,Y = np.meshgrid(x,y)
     ax.plot_surface(X,Y,F, cmap = 'hot')
     plt.xlabel("x")
@@ -51,3 +60,54 @@ def fast_marching(MASK):
     plt.show()
 
     return F
+
+
+def lissage(DIST) :
+
+    start_time = time.time()
+
+    N= np.shape(DIST)[0] - 1
+    MAT = np.zeros((N+1,N+1))
+    
+    for i in range(1,N):
+        for j in range(1,N):
+            MAT[i][j] = (DIST[i-1][j+1] + DIST[i-1][j-1] + DIST[i+1][j-1] + 4*DIST[i][j] + DIST[i+1][j+1] + DIST[i][j-1] + DIST[i][j+1] + DIST[i+1][j] + DIST[i-1][j]) / 12
+
+
+    print("Temps d'éxecution méthode Fast_Marching : %s secondes ---" % (time.time() - start_time))
+
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(111,projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,MAT, cmap = 'hot')
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
+
+    return MAT
+
+def lissage_opti(DIST,sigma):
+
+    N = np.shape(DIST)[0] - 1
+    
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+
+    gauss = np.exp(-((x+y)/sigma)**2 / 2)
+
+    MAT = sc.signal.convolve2d(DIST,gauss,'same')
+
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(111,projection = '3d')
+    X,Y = np.meshgrid(x,y)
+    ax.plot_surface(X,Y,MAT, cmap = 'hot')
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
+
+    return MAT
