@@ -90,24 +90,30 @@ def lissage(DIST) :
 
     return MAT
 
-def lissage_opti(DIST,sigma):
+def convolution(DIST):
 
     N = np.shape(DIST)[0] - 1
     
     x = np.linspace(0,1,N+1)
     y = np.linspace(0,1,N+1)
 
-    gauss = np.exp(-((x+y)/sigma)**2 / 2)
+    UN = np.ones((N+1)*(N+1))
+    T = np.zeros((N+1)*(N+1))
+    
+    for i in range(N+1):
+        for j in range(N+1):
+            k = i*(N+1) + j
+            T[k] = DIST[i][j]
 
-    MAT = sc.signal.convolve2d(DIST,gauss,'same')
-
+    CONVOL = np.convolve(T,UN).reshape(N+1,N+1)
+    
     fig = plt.figure(figsize = plt.figaspect(0.35))
     ax = fig.add_subplot(111,projection = '3d')
     X,Y = np.meshgrid(x,y)
-    ax.plot_surface(X,Y,MAT, cmap = 'hot')
+    ax.plot_surface(X,Y,CONVOL, cmap = 'hot')
     plt.xlabel("x")
     plt.ylabel("y")
 
     plt.show()
 
-    return MAT
+    return CONVOL
