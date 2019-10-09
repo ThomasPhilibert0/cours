@@ -12,6 +12,7 @@ import time
 
 
 def convolution(DIST,Noyau):
+    ##NOYAU = (1/256)*np.array([[1,4,6,4,1],[4,16,24,16,4],[6,24,36,24,6],[4,16,24,16,4],[1,4,6,4,1]])
     
     N = np.shape(DIST)[0] - 1
     M = np.shape(Noyau)[0] - 1
