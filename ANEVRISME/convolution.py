@@ -21,8 +21,8 @@ def convolution(DIST,Noyau):
     
     CONV = np.zeros((N+1,N+1))
 
-    for i in range (L,N-L):
-        for j in range(L,N-L):
+    for i in range (L,N-L+1):
+        for j in range(L,N-L+1):
             a = 0
             for k in range(-L,L-1):
                 for l in range(-L,L-1):
@@ -42,3 +42,23 @@ def convolution(DIST,Noyau):
     plt.show()
     
     return CONV
+
+def skeleton(conv,eps):
+    N = np.shape(conv)[0] - 1
+    MAT = np.zeros((N+1,N+1))
+    for i in range(N+1):
+        for j in range(N+1):
+            if conv[i][j]<eps:
+                MAT[i][j]=1
+                
+    x = np.linspace(0,1,N+1)
+    y = np.linspace(0,1,N+1)
+    
+    fig = plt.figure(figsize = plt.figaspect(0.35))
+    ax = fig.add_subplot(111)
+    X,Y = np.meshgrid(x,y)
+    ax.contour(X,Y,MAT, cmap = 'hot')
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    plt.show()
